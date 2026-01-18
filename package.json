@@ -1,7 +1,7 @@
 {
   "name": "com.unity.umi-render-extension-feature",
   "description": "用于蛋白胨渲染管线的自定义特性拓展包",
-  "version": "17.0.3",
+  "version": "0.0.1",
   "unity": "6000.0",
 
   "displayName": "Umi RenderExtensionFeature",
