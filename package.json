@@ -1,0 +1,29 @@
+{
+  "name": "com.unity.umi-render-extension-feature",
+  "description": "用于蛋白胨渲染管线的自定义特性拓展包",
+  "version": "17.0.3",
+  "unity": "6000.0",
+
+  "displayName": "Umi RenderExtensionFeature",
+  "dependencies": {
+
+    "com.unity.shadergraph": "17.0.3"
+  },
+  "keywords": [
+    "graphics",
+    "performance",
+    "rendering",
+    "Toon",
+    "mobile",
+    "render",
+    "pipeline"
+  ],
+
+  "author": {
+    "name": "Umi"
+  },
+  "samples": [],
+
+  "_fingerprint": "ab772dad2c1bf67d1b3463f09340fcdd5ce4659b"
+
+}
