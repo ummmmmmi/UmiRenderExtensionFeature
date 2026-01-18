@@ -9,6 +9,11 @@
 
     "com.unity.shadergraph": "17.0.3"
   },
+    "Samples":[
+  {
+    "EndFieldDemo": "终末地的渲染Demo"
+  }
+  ],
   "keywords": [
     "graphics",
     "performance",
