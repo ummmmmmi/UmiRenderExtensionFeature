@@ -1,5 +1,5 @@
-#ifndef ENDFIELD_TOON_BASE_BUFFER_INCLUDED
-#define ENDFIELD_TOON_BASE_BUFFER_INCLUDED
+#ifndef ENDFIELD_TOON_BASE_FUNC_INCLUDED
+#define ENDFIELD_TOON_BASE_FUNC_INCLUDED
 
 #define SHADOW_SAMPLER sampler_linear_clamp_compare
 SAMPLER_CMP(SHADOW_SAMPLER);
@@ -428,7 +428,7 @@ void ApplyEnvFeature(EndFieldSurface surface,
     {
         float3 lightBoxPos = _IVParam0.xyz;
         float useLightBox = _IVParam0.w;
-        float3 lightBoxDir = surface.positionWS.xyz - lightBoxPos;
+        float3 lightBoxDir = surface.positionWS - lightBoxPos;
         float maxLightBoxDistance = Max3(abs(lightBoxDir.z), abs(lightBoxDir.y), abs(lightBoxDir.x));
         //当前存在于lightbox中的系数，0不在，1在中心
         float indirRange = saturate((maxLightBoxDistance - 896.0f) * 0.015625f); //0.015625f = 1 / 64
@@ -446,7 +446,7 @@ void ApplyEnvFeature(EndFieldSurface surface,
             bool inRange02 = saturate((maxLightBoxDistance - 200.0f) * 0.0625f) < 1.0f;
             //0.00390625f = 1 /256, 0.001953125f = 1 / 512, 0.0004882813f = 1 / 2048
             float posSize = inRange01 ? 0.00390625f : (inRange02 ? 0.001953125f : 0.0004882813f);
-            float3 T3UV = float3(frac(posSize * surface.positionWS.xyz));
+            float3 T3UV = float3(frac(posSize * surface.positionWS));
             float4 tex3d_3 = _T3.SampleLevel(sampler_T3, T3UV, inRange01 ? 0.0f : (inRange02 ? 1.0f : 2.0f));
             float hasLightBox = floor(tex3d_3.w * 255.0f + 0.5f);
 
@@ -455,7 +455,7 @@ void ApplyEnvFeature(EndFieldSurface surface,
             {
                 //0.00312 = 1 / 320, 0.0125 = 1/ 80
                 float3 tex3d_Size = _IVParam1.xyz;
-                float3 punctualLightShadowTexV2_UVW = frac(surface.positionWS.xyz / hasLightBox);
+                float3 punctualLightShadowTexV2_UVW = frac(surface.positionWS / hasLightBox);
                 punctualLightShadowTexV2_UVW = punctualLightShadowTexV2_UVW * 4 + 0.5;
                 punctualLightShadowTexV2_UVW += floor(mad(tex3d_3.x, 255.0f, 0.5f)) * 5;
                 punctualLightShadowTexV2_UVW *= tex3d_Size;
@@ -816,7 +816,7 @@ float3 ApplyVFXFeature(EndFieldVecData vecData, EndFieldSurface surface)
     return effectColor;
 }
 
-//手动放置rim灯光位置的feature
+//rim feature
 float3 ApplyRimFeature(float3 diffuseSat, EndFieldVecData vecData, EndFieldShadowData shadowData, EndFieldSurface surface)
 {
     float3 rimLightPosWS = UNITY_MATRIX_M._m03_m13_m23; //_RimLightPosWS
@@ -900,12 +900,14 @@ void InitializeEndFieldLightData(Light light,
 {
 
     lightData.useStandardColor = _CharacterParams5.w;
-    lightData.standardColor = lerp(light.color, _CharacterParams5.xyz, lightData.useStandardColor);
+    lightData.standardColor = _CharacterParams5.xyz;
+    // lightData.standardColor = lerp(light.color, _CharacterParams5.xyz, lightData.useStandardColor);
     lightData.useStandardIntenstity = _CharacterParams11.w;
     lightData.direction = light.direction;
     lightData.attenuation = light.distanceAttenuation;  //EndField里是1.6243868
     lightData.intensity = lerp(lightData.attenuation, 1.0f, lightData.useStandardIntenstity);
-    lightData.color = lightData.standardColor * lightData.intensity;
+    // lightData.color = lightData.standardColor * lightData.intensity;
+    lightData.color = lerp(light.color, _CharacterParams5.xyz, lightData.useStandardColor) * lightData.intensity;
 }
 
 void IntializeEndFieldShadow(EndFieldSurface surface,
@@ -985,8 +987,8 @@ void IntializeEndFieldSurface(Varyings i, uint facing,
     //params part
     surface.basecolor = mainTex.rgb * _BaseColor.rgb;
     surface.alpha     = mainTex.a * _BaseColor.a;
-    surface.basecolor_shadow = surface.basecolor * _ShadowColorBrightness;
-    surface.basecolor_shadow = lerp(Luminance(surface.basecolor_shadow), surface.basecolor_shadow, _ShadowColorSaturation);
+    float3 basecolor_shadow = surface.basecolor * _ShadowColorBrightness;
+    surface.basecolor_shadow = lerp(Luminance(basecolor_shadow), basecolor_shadow, _ShadowColorSaturation);
     surface.metallic = lerp(0, _Metallic, pbrMask.r);
     surface.specularLevel = pbrMask.g;
     surface.anisotropy = 0;
@@ -994,7 +996,7 @@ void IntializeEndFieldSurface(Varyings i, uint facing,
     surface.perceptualRoughness = lerp(0, _Roughness, 1 - surface.perceptualsmoothness);
     surface.perceptualRoughness_rain = 0.01f;
     surface.rainMask = 0.0f;
-    surface.occlusion = pbrMask.b;
+    surface.occlusion = lerp(1 - _Occlusion, 1, pbrMask.b);
     surface.emission         = emissionTex * _EmissionCol.xyz * _EmissionIntensity;
 
     //vector part

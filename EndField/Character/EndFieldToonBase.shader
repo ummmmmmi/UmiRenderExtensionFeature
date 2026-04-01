@@ -905,6 +905,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Base"
                 float NdotUp_clamp = saturate(_CharacterParams7.x + dot(surface.normalWS, _CharacterParams6.xyz))
                                     * _CharacterParams7.y + _CharacterParams7.z;     //计算顶光吗
                 //region 湿身feature
+                // ===================== region 湿身feature =====================
                 ApplyRainFeature(surface);
                 //===================== 提前的计算位置 shadow sample =====================
                 EndFieldShadowData shadowData;

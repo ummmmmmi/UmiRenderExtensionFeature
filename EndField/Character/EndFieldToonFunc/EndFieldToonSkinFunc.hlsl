@@ -1,5 +1,5 @@
-#ifndef ENDFIELD_TOON_HAIR_FUNC_INCLUDED
-#define ENDFIELD_TOON_HAIR_FUNC_INCLUDED
+#ifndef ENDFIELD_TOON_SKIN_FUNC_INCLUDED
+#define ENDFIELD_TOON_SKIN_FUNC_INCLUDED
 
 #define SHADOW_SAMPLER sampler_linear_clamp_compare
 SAMPLER_CMP(SHADOW_SAMPLER);
@@ -30,6 +30,159 @@ float normalizeMinMax(float x, float minVal, float maxVal)
     return (x - minVal) * rcp(range);
 }
 
+
+// region EndField 精简版 params
+
+// #define _cb0_6 float4(0.0600995, -0.0446703, 0.9971923, 0.00)  //dir吗？ xz: , y: 
+// #define _cb0_32 float4(0.2486042, 301.1375122, 3.4918606, 0.00)  //xyz: pos吗
+
+#define _cb0_65 float4(-1.00, 0.10, 50.00, 0.02)  //y: 
+
+#define _cb0_66 float4(0.00, 0.00, 0.00, 0.00)  //unity_OrthoParams.w: 这是判断透视相机还是正交相机的参数
+#define _cb0_82 float4(13.9273453, 278.5469055, 557.093811, 208.4173279)  //x: rain 
+
+#define _cb0_88 float4(-1.00, 0.50, 1.00, 1.9431806E-41)  //x: SampleBias的bias值
+#define _cb0_89 float4(1.00, 0.00, 0.00, 0.00)  //x:_ExposureParams SH一阶颜色的强度值的缩放值 and 后面颜色的除数
+#define _cb0_90 float4(0.00, 4.0357396E-41, 6.3316270E-41, 6.8360944E-41)  //y:
+#define _cb0_91 float4(0.2877225, 0.2877225, 1.00, 0.00)  //x: _EnvironmentGlobalParams0 SH一阶颜色的强度值
+
+// #define _cb0_131 float4(0.00, 0.00, 0.00, 0.001)  //xyz: _FogColor_E, w:
+// #define _cb0_132 float4(0.00, 0.00, 0.00, 0.00)  //xyz: _FogColor_A, w:
+// #define _cb0_133 float4(0.00001, 0.00001, 0.00001, -1000.00)  //xyz: _FogColor_B, w:
+// #define _cb0_134 float4(0.00, 0.00, 0.00, 0.00)  //xyz: _FogColor_C, w:
+// #define _cb0_135 float4(0.00, 0.00, 0.00, 0.00)  //xyz: _FogColor_F, w:
+// #define _cb0_136 float4(0.00, 0.00, 1.00, 0.001)  //xyz: _AtmosphereFogParams5, w:
+#define _cb0_137 float4(0.00, 0.00, 0.00, 0.00)  //xyz: dir?, w:
+#define _cb0_138 float4(0.00, 0.00, 0.00, 0.00)  //xyz: dir?, w:
+// #define _cb0_139 float4(0.00, 0.00, 0.00, 1.00)  //xyz: 额外的雾效颜色, w:
+#define _cb0_140 float4(0.00, 0.00, 0.00, 0.00)  //xyz: dir?, w:
+
+#define _cb0_141 float4(0.00, 0.00, 0.00, 0.00)  //z: 雾效里特性开关
+
+
+#define _cb0_157 float4(224.3821564, 86.9738693, -599.5462036, 278.5469055)  //
+// #define _cb0_160 float4(1.00, 1.05, 0.55, 0.80)  //z: , w: 
+// #define _cb0_161 float4(0.00, 1.00, 1.00, 1.00)  //x: 插值, y: _CharacterParams1.y，z: 插值, w: 插值
+
+#define _cb0_162 float4(0.8783069, 0.9302293, 1.1216931, 0.30)  //xyz: _LaserDefaultColor不采样纹理的默认镭射代替颜色, w:控制r12.xyz的颜色与镭射颜色插值_LaserIntensity
+#define _cb0_163 float4(1.18701, 0.9272287, 0.8129899, 1.00)  //w: 插值
+
+// #define _cb0_164 float4(0.1972383, 0.5299193, 0.8247925, 0.00)  //xyz: 像是lightdir?, w: 插值
+
+// #define _cb0_165 float4(1.00, 1.00, 1.00, 1.00)  //xyz: ,w: 插值
+#define _cb0_166 float4(0.00, 1.00, 4.3711388E-08, 0.00)  //xyz: 和normalWS dot, w: 插值
+// #define _cb0_167 float4(0.15, 1.50, 0.50, 0.40)  //x: , y: , z: , w:
+// #define _cb0_168 float4(0.00, 0.00, 0.00, 1.00)  //xyz: rim color, w: 开关
+// #define _cb0_169 float4(8.7422777E-08, -1.00, 0.00, 1.00)  //rim 辅助dir xyz:
+// #define _cb0_170 float4(0.00, 1.00, 2.00, -100.00)  //x: main intensity, y: , z: posOS scale, w:
+#define _cb0_171 float4(1.00, 0.926182, 0.8666667, 0.00)  //w: _CharacterParams11 SH一阶颜色的插值
+#define _cb0_175 float4(224.3821564, 86.9738693, -599.5462036, 1.00)  //xyz: _IVParam0, w: feature开关
+#define _cb0_176 float4(0.003125, 0.003125, 0.0125, 0.3333333)  //xyz: _IVParam1
+#define _cb0_178 float4(-0.0075508, 0.4722373, 0.0121708, 1.0963056)  //xyzw: _IVDefaultSHAr
+#define _cb0_179 float4(-0.0075508, 0.4722373, 0.0121708, 1.0963056)  //xyzw: _IVDefaultSHAg
+#define _cb0_180 float4(-0.0075508, 0.4722373, 0.0121708, 1.0963056)  //xyzw: _IVDefaultSHAb
+
+
+#define _cb1_3 float4(0.1562779, 301.004364, 0.0519908, 1.00)   //customlightPos
+#define _cb1_4 float4(1000.00, 0.00, 0.00, 5.6051939E-45)   //w: switch rain dir
+#define _cb1_5 float4(2.5888008E-40, 2.5709763E-40, 7.2026741E-43, 1.00)   //w: unity_WorldTransformParams.w
+#define _cb1_13 float4(0.00, 0.00, 0.00, 0.00)   //
+
+#define _cb2_0 float4(1.4012985E-44, 5.0446745E-42, 4.4841551E-44, 1.1210388E-43)   //w: asint() = 80
+#define _cb2_1 float4(6.3058431E-44, 2.8698593E-42, 3.5873241E-42, 2.0178698E-42)   //y:
+#define _cb2_2 float4(0.10, 50.00, 1.00, 1.00)   //w:
+
+
+#define _cb3_0 float4(0.0213893, -0.6427876, -0.765746, 0.00)   //xyz: dir?
+
+#define _cb3_3 float4(1.00, 1.00, 1.00, 1.6243868)   //xyz: dir?
+
+
+#define _cb4_30 float4(1.00, 2.00, 0.000434, 6400.00)   //x:
+#define _cb4_31 float4(0.00, 0.00, 1.00, 0.00)   //x: , z:
+
+
+#define _cb5_0 float4(0.215, 1.00, 0.00, 1.00)  // w: normalScale
+#define _cb5_2 float4(1.1801041E-38, 0.00, 1.1801041E-38, 0.00)  //y: vertical_rampColor与diffuse的插值,  w: normalScale
+#define _cb5_5 float4(1.1801041E-38, 0.50, 1.00, 0.95)  //y: shadow albedoTint, z: graAlbedo与albedo的插值
+#define _cb5_7 float4(0.00, 0.50, 1.1801041E-38, 0.00)  //x: 使用albedo的alpha _SurfaceType
+#define _cb5_9 float4(1.1801041E-38, 0.50, 1.1801041E-38, 0.00)  //
+#define _cb5_14 float4(1.1242853E-38, 1.1430113E-38, 9.00, 0.00)    //z: _EmissionIntensity, w: Back Face Normal Flip
+#define _cb5_19 float4(0.00, -1000.00, 0.00, 1.00)    //w: 选择燃烧feature使用uv0还是uv1， 用_DECAL_UV关键字替代
+#define _cb5_20_cloth2 float4(0.00, 0.00, 1.00, 0.00)    //x: ndv偏移, y: , z: ndv power, w:
+#define _cb5_20_cloth3 float4(0.00, 0.00, 1.00, 1.00)    //x: ndv偏移, y: , z: ndv power, w:
+
+#define _cb5_21 float4(1.00, 0.505, 10.00, 1.02)    //x: , y: , z: 
+#define _cb5_26 float4(1.00, 1.00, 1.00, 1.00)    //_BaseColor
+#define _cb5_27 float4(1.00, 1.00, 1.00, 1.00)    //_EmissionCol
+#define _cb5_44 float4(0.00, 0.00, 0.00, 0.00)    //xy: , zw: 
+#define _cb5_45 float4(110.1072845, 1.8758985, 0.00, 1.00)    //xyz: 某种颜色吗, w: 
+#define _cb5_46 float4(1.00, 0.00, 0.00, 1.00)    //xyz: 颜色, w: 
+#define _cb5_47 float4(1.00, 0.017038, 0.00, 1.00)    //
+#define _cb5_57 float4(1.00, 1.00, 0.00, 0.00)    //
+
+//cbt-3 body params
+//ubo 0 7
+#define _17_m28 float4(6.0098567, 120.19713593, 240.39427185, 16.78515625)  //_Time
+
+#define _17_m38 float4(1.00, 0.00, 0.00, 0.00)
+#define _17_m40 float4(0.28772247, 0.28772247, 1.00, 0.00)
+#define _17_m94 float4(1.00, 1.04999995, 0.55000001, 0.80000001)
+#define _17_m95 float4(0.00, 1.00, 1.00, 1.00)
+#define _17_m97 float4(1.18701005, 0.92722869, 0.81298989, 1.00)
+#define _17_m98 float4(1.00, 0.92618197, 0.86666667, 1.00)
+#define _17_m100 float4(0.00, 1.00, 4.37113883E-8, 0.00)
+#define _17_m101 float4(0.15000001, 1.50, 0.50, 0.00)
+#define _17_m102 float4(0.00, 0.00, 0.00, 1.00)
+
+#define _17_m103 float4(8.74227766E-8, -1.00, 0.00, 0.40000001)
+#define _17_m104 float4(0.00, 1.00, 2.00, -100.00)
+
+#define _17_m105 float4(0.10355083, 0.52991927, 0.84170228, 0.00)
+#define _17_m106 float4(1.00, 1.00, 1.00, 0.00)
+#define _17_m107 float4(0.00, 0.00, 0.00, 1.00)
+
+//ubo 1 0
+#define _46_m1 0.454f
+
+#define _46_m30 float4(0.38132611, 0.12477184, 0.13843162, 1.00)
+//ubo 2 0
+// #define _20_m0_12_m7 float4(0.00, 0.00, 0.00, 0.00)
+//ubo 3 12
+#define _33_m0 float4(0.02138927, -0.64278764, -0.76574594, 0.00)
+#define _33_m3 float4(1.00, 1.00, 1.00, 1.62438679)
+//ubo 3 14
+#define _35_m6 float4(1.00, 2.00, 0.00043403, 6400.00)
+
+//region old struct
+struct DotData
+{
+    float ndl;
+    float ndh;
+    float ndv;
+    float vdh;
+    float ldh;
+};
+
+struct VecData
+{
+    float3 positionOS;
+    float3 positionWS;
+    float4 positionHCS;
+    float3 normalWS_raw;
+    float3 tangentWS_raw;
+    float3 bitangentWS_raw;
+    
+    float3 normalWS;
+    float3 tangentWS;
+    float3 bitangentWS;
+    
+    float3 lightDirWS;
+    float3 viewDirWS;
+    float3 halfDirWS;
+    float3 reflectDirWS;
+};
+
 //region new struct
 struct Attributes
 {
@@ -52,10 +205,10 @@ struct Attributes
     float2 uv6          :TEXCOORD4;     //weight xy
     float2 uv7          :TEXCOORD5;     //weight zw
     #endif
-    UNITY_VERTEX_INPUT_INSTANCE_ID
+    UNITY_VERTEX_INPUT_INSTANCE_ID 
 };
 
-struct Varyings
+struct Varyings 
 {
     float4 positionHCS      :SV_POSITION;
     float4 uv               :TEXCOORD0;// xy:uv0 zw:uv1
@@ -68,7 +221,7 @@ struct Varyings
     float3 normalOS         :TEXCOORD7;
     float3 positionOS       :TEXCOORD8;
     // uint   facing           :VFACE;
-
+    
     // Other Props
 
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -83,7 +236,8 @@ struct EndFieldLightData
     float  intensity;   //强度
     float  attenuation; //衰减
 
-    float3 standardColor;          //基础材质灯光颜色
+    // float3 standardColor;          //基础材质灯光颜色
+    float3 standardSkinColor;          //基础材质(皮肤）灯光颜色
     float  useStandardColor;       //使用 基础材质灯光颜色
     float  useStandardIntenstity;  //使用 基础材质灯光强度
 };
@@ -95,6 +249,8 @@ struct EndFieldVecData
     float3 viewDirWS;
     float3 cameraForwardWS;
     float3 cameraForwardWS_XZ;
+    float3 cameraForwardOS;
+    float3 cameraForwardOS_XZ;
     float3 cameraLeftWS;
     float3 halfDirWS;
     float3 reflectDirWS;
@@ -104,7 +260,7 @@ struct EndFieldDotData
 {
     float NdotL;
     float NdotL_XZ;
-
+    
     float NdotH;
     float NdotV;
     float VdotH;
@@ -141,37 +297,37 @@ struct EndFieldSurface
     float3 emission;
     float  depth;
 
-    float anisoValue;
-    float anisoValue2;
+    float RimMask_XChannel;
+    float SDFMask_YChannel;
+    float FlatSHMask_ZChannel;
+    float noseLightMask_WChannel;
 
-    float proceduralTangentMask;
-    float secondSpecMask;
-    float anisotropyFade;
-
-    float hairLine;
-
-    float3 specBitangent;
-
+    float  faced;
+    
     float3 normalWS_raw;
+    float3 normalWS_raw_XZ;
     float3 tangentWS_raw;
     float3 bitangentWS_raw;
     float  tangent_W;
 
     float3x3 TBNWS;
-
+    
     float3 normalOS;
     float3 normalWS;
     float3 tangentWS;
     float3 bitangentWS;
 
-    float3 normalWS_smooth;
-
     float3 normalWS_withRain;
+
+    float3 rimDirWS_XZ;
+
+    float4 sdfMap;
+    float lightAtForward;
 
     float3 positionOS;
     float3 positionWS;
     float4 positionHCS;
-
+    
     float2 screenUV;
     float2 screenPos;
 
@@ -226,22 +382,6 @@ struct LightLoopOutput
 };
 
 //region BSDF func
-void UnpackHairNormalMap(inout real3 normal1, inout real3 normal2,
-    real4 packedNormal, real scale1 = 1.0, real scale2 = 1.0
-    )
-{
-    real3 nor1, nor2;
-    nor1.xy = packedNormal.xy * 2.0 - 1.0;
-    nor1.z = max(1.0e-16, sqrt(1.0 - saturate(dot(nor1.xy, nor1.xy))));
-    nor1.xy *= scale1;
-    normal1 = nor1;
-
-    nor2.xy = packedNormal.zw * 2.0 - 1.0;
-    nor2.z = max(1.0e-16, sqrt(1.0 - saturate(dot(nor2.xy, nor2.xy))));
-    nor2.xy *= scale2;
-    normal2 = nor2;
-}
-
 void ApplyToEndFieldEnvData(float envGlobalIntensity, float4 shAr, float4 shAg, float4 shAb, EndFieldSurface surface,
     inout EndFieldEnvData envData)
 {
@@ -277,6 +417,24 @@ void ApplyToEndFieldEnvData(float envGlobalIntensity, float4 shAr, float4 shAg, 
     envData.envIntensity = envGlobalIntensity * envLightMaxIntensity;
 }
 
+void ApplyFaceRimColorToSurfaceData(EndFieldVecData vecData,
+    inout EndFieldSurface surface)
+{
+    float NdV = dot(surface.normalWS_raw, vecData.viewDirWS);
+    float NdV_scale = saturate(NdV) * 0.85f + 0.15f;
+
+    #ifdef _SDFLIGHTMAP
+        float _1078 = saturate(vecData.cameraForwardOS_XZ.z + 0.5f);
+        float face_rimMask = surface.RimMask_XChannel * lerp(_1078, 1.0f, surface.SDFMask_YChannel);
+    #else
+        float face_rimMask = 1.0f;
+    #endif
+    float sdfRimMask = saturate(( face_rimMask * _SkinRimOffScale) * (1.0f - NdV_scale) );
+    
+    float3 sdfRimColor = lerp(1.0f, _SDFRimColor.xyz, sdfRimMask);  //脸颊两侧的菲涅尔，增加立体感
+    surface.basecolor = surface.basecolor * sdfRimColor;
+}
+
 float3 CalculatePureLaserColor(float3 RGB)
 {
     float3 hsv = RgbToHsv(RGB);
@@ -294,6 +452,47 @@ float3 CalculatePureLaserColor(float3 RGB)
     return boostedColor;
 }
 
+void ApplySDFFeatureToSurfaceData(EndFieldVecData vecData,
+    inout EndFieldSurface surface)
+{
+    float eps = 6.103515625e-05;
+    
+    float3 worldAxisX = UNITY_MATRIX_M._m00_m10_m20;
+    float3 worldAxisY = UNITY_MATRIX_M._m01_m11_m21;
+    float3 worldAxisZ = UNITY_MATRIX_M._m02_m12_m22;
+    // float lightAtRight = dot(vecData.lightDirWS, worldAxisX);
+    // float lightAtForward = dot(vecData.lightDirWS, worldAxisZ);
+    float3 lightDirOS = mul(UNITY_MATRIX_M, vecData.lightDirWS);
+
+    // float sdfValue_invLen = rsqrt(dot(float2(lightAtRight, lightAtForward), float2(lightAtRight, lightAtForward)));
+    // surface.lightAtForward = sdfValue_invLen * lightAtForward;
+    // float sdfValue_invLen = rsqrt(dot(lightDirOS.xz, lightDirOS.xz));
+    
+    float3 lightDirOS_nlz = normalize(float3(lightDirOS.x, 0, lightDirOS.z));
+    surface.lightAtForward = lightDirOS_nlz.z;
+    
+    float filpSDFuv = (0.0f < lightDirOS_nlz.x) ? 1.0f : 0.0f;
+
+    float2 SDFuv = float2(lerp(1.0f - surface.baseUV.x, surface.baseUV.x, filpSDFuv), surface.baseUV.y);
+    surface.sdfMap = SAMPLE_TEXTURE2D_LOD(_SDFLightmap, sampler_SDFLightmap, SDFuv, 0.0f);
+    float sdfLightmap = surface.sdfMap.z;
+    float noseSDF = surface.sdfMap.w;
+    sdfLightmap = sdfLightmap * 2.0f - 1.0f;
+
+    float sdfZRaw = lerp(-sdfLightmap, sdfLightmap, filpSDFuv);
+    // float _1642 = 1.0f - abs(sdfXZRaw);    //对称的sdfmap.z
+
+    float3 nObj = normalize(float3(sdfZRaw, eps, 1.0 - abs(sdfZRaw)));
+
+    // float3 sdfNormWS = worldAxisX.xyz * _1648 + _1649 * worldAxisZ.xyz;
+    float3 sdfNormWS = mul(UNITY_MATRIX_M, nObj);
+    float3 sdfNormWS_nlz_safe = SafeNormalize(sdfNormWS);
+
+    float3 mixNormalWS = lerp(sdfNormWS_nlz_safe, surface.normalWS_withRain, surface.SDFMask_YChannel);
+    float3 mixNormalWS_nlz = SafeNormalize(mixNormalWS);
+    surface.normalWS = mixNormalWS_nlz;
+}
+
 void ApplyEnvFeature(EndFieldSurface surface,
     inout EndFieldEnvData envData)
 {
@@ -304,7 +503,7 @@ void ApplyEnvFeature(EndFieldSurface surface,
     {
         float3 lightBoxPos = _IVParam0.xyz;
         float useLightBox = _IVParam0.w;
-        float3 lightBoxDir = surface.positionWS - lightBoxPos;
+        float3 lightBoxDir = surface.positionWS.xyz - lightBoxPos;
         float maxLightBoxDistance = Max3(abs(lightBoxDir.z), abs(lightBoxDir.y), abs(lightBoxDir.x));
         //当前存在于lightbox中的系数，0不在，1在中心
         float indirRange = saturate((maxLightBoxDistance - 896.0f) * 0.015625f); //0.015625f = 1 / 64
@@ -322,7 +521,7 @@ void ApplyEnvFeature(EndFieldSurface surface,
             bool inRange02 = saturate((maxLightBoxDistance - 200.0f) * 0.0625f) < 1.0f;
             //0.00390625f = 1 /256, 0.001953125f = 1 / 512, 0.0004882813f = 1 / 2048
             float posSize = inRange01 ? 0.00390625f : (inRange02 ? 0.001953125f : 0.0004882813f);
-            float3 T3UV = float3(frac(posSize * surface.positionWS));
+            float3 T3UV = float3(frac(posSize * surface.positionWS.xyz));
             float4 tex3d_3 = _T3.SampleLevel(sampler_LinearClamp, T3UV, inRange01 ? 0.0f : (inRange02 ? 1.0f : 2.0f));
             float hasLightBox = floor(tex3d_3.w * 255.0f + 0.5f);
 
@@ -331,13 +530,13 @@ void ApplyEnvFeature(EndFieldSurface surface,
             {
                 //0.00312 = 1 / 320, 0.0125 = 1/ 80
                 float3 tex3d_Size = _IVParam1.xyz;
-                float3 punctualLightShadowTexV2_UVW = frac(surface.positionWS / hasLightBox);
+                float3 punctualLightShadowTexV2_UVW = frac(surface.positionWS.xyz / hasLightBox);
                 punctualLightShadowTexV2_UVW = punctualLightShadowTexV2_UVW * 4 + 0.5;
                 punctualLightShadowTexV2_UVW += floor(mad(tex3d_3.x, 255.0f, 0.5f)) * 5;
                 punctualLightShadowTexV2_UVW *= tex3d_Size;
 
                 float4 pLightShadow00 = _T4.SampleLevel(sampler_LinearClamp, punctualLightShadowTexV2_UVW, 0.0f);
-
+                
                 float4 pLightShadow01 = _T5.SampleLevel(sampler_LinearClamp, float3(punctualLightShadowTexV2_UVW.xy, punctualLightShadowTexV2_UVW.z * 0.3333333f), 0.0f);
                 float4 pLightShadow02 = _T5.SampleLevel(sampler_LinearClamp, float3(punctualLightShadowTexV2_UVW.xy, punctualLightShadowTexV2_UVW.z * 0.3333333f + 0.3333333f), 0.0f);
                 float4 pLightShadow03 = _T5.SampleLevel(sampler_LinearClamp, float3(punctualLightShadowTexV2_UVW.xy, punctualLightShadowTexV2_UVW.z * 0.3333333f + 0.6666667f), 0.0f);
@@ -395,37 +594,55 @@ void ApplyEnvFeature(EndFieldSurface surface,
         envData.envColor_fixed = envColor;
         envData.envColor_raw = 1.0f;
         envData.envDirWS = 0.0f;
-        envData.useEnvFeature = 0.0f;
+        envData.useEnvFeature = 0.0f;       
         envData.envIntensity = envGlobalIntensity;
     }
 }
 
-float4 SampleRampColor_NdotL(EndFieldVecData vecData, EndFieldDotData dotData)
+float4 SampleRampColor_NdotL(EndFieldVecData vecData, EndFieldDotData dotData, EndFieldSurface surface)
 {
     // 视角修正 (View Dependent Bias)
     float viewPitchBias = smoothstep(0, 1, (0.75f - abs(vecData.cameraForwardWS.y)) * 2.0f);   //视角保持水平为1，其余角度为0
-    float LdotCamForDir = dotData.NgtLdotForwardWS_clamped;   //负光照方向 dot 视线方向，等于在看向光源位置是1，其余是0
+    float isLookingBack = dotData.NgtLdotForwardWS_clamped;   //负光照方向 dot 视线方向，等于在看向光源位置是1，其余是0
+    float isLightBehind = saturate(-surface.lightAtForward);
 
-    float backFactor = viewPitchBias * LdotCamForDir;
-    float NdotL_Bias = dotData.NdotL * (-dotData.NdotL * 0.5) + 0.5f;
+    float correctionBlend =  (isLightBehind * isLookingBack) * ( 1.0f  - _CharacterParams3.w);  //开启补光的参数
 
+    // 线性映射 vs 抛物线映射 (-0.5*z^2 + z + 0.5)
+    float curveCenter = 0.5f - surface.lightAtForward * (surface.lightAtForward * 0.5f - 1.0f);
+    float biasCenter = lerp(surface.lightAtForward , curveCenter, correctionBlend) * 0.5f;
+    
+    // 面部 SDF 阈值步进
+    float biasRange = clamp( 0.5f - biasCenter, 0.001f, 0.999f);
+    float sdfVal = (surface.sdfMap.x + surface.sdfMap.y) * 0.5;
+
+    // 动态滑动窗口 [Lo, Hi] 决定阴影边缘软硬
+    float stepLo = max(biasRange * 2.0f - 1.0f, 0.0f);
+    float stepHi = min(2.0 * biasRange, 1.0);
+    
+    float _1730 = normalizeMinMax(sdfVal, stepLo, stepHi);
+    
+    float _1731_smt = smoothstep(0.0f, 1.0f, _1730);
+    float _1732 = abs(  - _1731_smt  - biasCenter * ceil(biasCenter) );
+    float face_NdotL_Fixed = mad(_1732, 2.0f, -1.0f);
+    
     // 给NdotL的背面（负数区域）加上光照效果, 视角在光照背面时，将明暗交界线推移到后方，有更多细节
-    float NdotL_Fixed = dotData.NdotL + lerp(backFactor * NdotL_Bias, _CharacterParams4.w, _CharacterParams3.w);    //启用的开关，是否有更多细节，是否简化细节
+    float NdotL_Fixed = _CharacterParams4.w * _CharacterParams3.w + dotData.NdotL;    //启用的开关，是否有更多细节，是否简化细节
     NdotL_Fixed = clamp(NdotL_Fixed, -1, 1);
 
     float2 rampUV;
-    rampUV.x = NdotL_Fixed * 0.5 + 0.5;
+    rampUV.x = lerp(face_NdotL_Fixed, NdotL_Fixed, surface.SDFMask_YChannel) * 0.5f + 0.5f;
     rampUV.y = 0.5;
     float4 rampColor = SAMPLE_TEXTURE2D_LOD(_ShadowRampTex, sampler_ShadowRampTex, rampUV, 0);      //控制颜色变化的ramp
-
+    
     return rampColor;
 }
 
 float SampleRampColor_NdotV(EndFieldVecData vecData, EndFieldSurface surface)
 {
     float3 cameraForwardWS_fixed = float3(vecData.cameraForwardWS.x,
-                                      min(vecData.cameraForwardWS.y + 0.25f, 1.0f),
-                                          vecData.cameraForwardWS.z);
+                                    min(vecData.cameraForwardWS.y + 0.25f, 1.0f),
+                                    vecData.cameraForwardWS.z);
     float3 cameraOffsetDir_nlz = normalize(cameraForwardWS_fixed);
     float2 rampUV_alpha;
     rampUV_alpha.x = dot(surface.normalWS, cameraOffsetDir_nlz) * 0.5 + 0.5;    //NdotV的微调版
@@ -434,114 +651,98 @@ float SampleRampColor_NdotV(EndFieldVecData vecData, EndFieldSurface surface)
     return rampAlpha;
 }
 
-void CalculateSpecularBitangent(EndFieldVecData vecData, inout EndFieldSurface surface)
+float D_EndField(EndFieldDotData dotData, EndFieldBSDF bsdf)
 {
-    //模拟围绕 Y 轴的切线流
-    float3 worldAxisX = normalize(UNITY_MATRIX_M._m00_m10_m20); // 模型 Right
-    float3 worldAxisY = normalize(UNITY_MATRIX_M._m01_m11_m21); // 模型 Up
-    float3 worldAxisZ = normalize(UNITY_MATRIX_M._m02_m12_m22); // 模型 Forward
-
-    float3 anisoModelvec = _AnisotropyDirX * worldAxisX + worldAxisY;
-    // float3 anisoModelvec = _AnisotropyDirX * float3(UNITY_MATRIX_M[0].zxy) + float3(UNITY_MATRIX_M[1].zxy);
-    // float3 anisoModelvec = _AnisotropyDirX * float3(UNITY_MATRIX_I_M[0].xyz) + float3(UNITY_MATRIX_I_M[1].xyz);
-    // float3 anisoModelvec = _AnisotropyDirX * float3(UNITY_MATRIX_I_M[0].xyz) + float3(UNITY_MATRIX_I_M[1].xyz);
-    float3 anisoModelvec_nlz = SafeNormalize(anisoModelvec);
-
-    float3 specTangent = cross(surface.normalWS_smooth, anisoModelvec_nlz);
-    specTangent = lerp(specTangent, surface.tangentWS_raw.yzx, surface.proceduralTangentMask);
-    // return float4(dot(specTangent, vecData.viewDirWS).xxx, 1);
-
-    float specTangent_w = lerp(1.0f, surface.tangent_W, surface.proceduralTangentMask);
-    surface.specBitangent = cross(surface.normalWS_smooth, specTangent) * specTangent_w * GetOddNegativeScale();
-
-    // 获取模型空间的轴 (用于投影)
-    float3 objAxisX_WS = worldAxisX;
-    float3 objAxisZ_WS = worldAxisZ;
-
-    // 将法线投影到模型空间 XZ 平面
-    float N_dot_ObjX = dot(surface.normalWS_smooth, objAxisX_WS);
-    float N_dot_ObjZ = dot(surface.normalWS_smooth, objAxisZ_WS);
-
-    // 将视线投影到模型空间 XZ 平面
-    float V_dot_ObjX = dot(vecData.viewDirWS, objAxisX_WS);
-    float V_dot_ObjZ = dot(vecData.viewDirWS, objAxisZ_WS);
-
-    // 归一化投影向量 (相当于 normalize(N.xz) 和 normalize(V.xz))
-    float invLenN = rsqrt(dot(float2(N_dot_ObjX, N_dot_ObjZ), float2(N_dot_ObjX, N_dot_ObjZ)));
-    float invLenV = rsqrt(dot(float2(V_dot_ObjX, V_dot_ObjZ), float2(V_dot_ObjX, V_dot_ObjZ)));
-
-    // 计算两个投影向量的点积 (Cos Angle)
-    float planarCos = dot(
-        float2(invLenN * N_dot_ObjX, invLenN * N_dot_ObjZ),
-        float2(invLenV * V_dot_ObjX, invLenV * V_dot_ObjZ)
-    );
-    // 计算衰减系数: _AnisotropyEdgeFade 控制边缘淡出强度
-    surface.anisotropyFade = pow(saturate(planarCos), _AnisotropyEdgeFade);
+    float rain_NdotH2 = dotData.NdotH * dotData.NdotH;
+    float rough2 = bsdf.roughness * bsdf.roughness;
+    float deom = rain_NdotH2 * (rough2 - 1.0f) + 1.0f;
+    float deom2 = deom * deom;
+    float ggxRaw = (rough2 != deom2) ? rough2 / deom2 : 1.0f;
+    
+    //随视角变化，边缘会有不同
+    float viewDependentFactor = dotData.NdotV_clamped * 2 + bsdf.roughness + 0.00001f;        //r1.y: roughness
+    float specular = ggxRaw * rcp(viewDependentFactor);
+    specular = specular * 0.5 - 6.10351563e-005;
+    specular = clamp(specular, 0, 20);
+    return specular;
 }
 
-float AnisotropicSpecular(float3 T, float3 H)
+float3 F_EndField(EndFieldDotData dotData, EndFieldSurface surface, EndFieldBSDF bsdf)
 {
-    float dotTH = dot(T, H);
-    float sinTH = sqrt(1.0f - dotTH * dotTH);
-    return max(sinTH, 9.9999997473787516355514526367188e-05f);;
-}
-
-float3 Hair_D_EndField(EndFieldVecData vecData, EndFieldSurface surface)
-{
-    float3 anisoDirWS = ShiftTangent(surface.specBitangent, surface.normalWS_smooth, surface.anisoValue);
-    float anisoSpec = AnisotropicSpecular(anisoDirWS, vecData.halfDirWS);
-    float HdotAniso = dot(anisoDirWS, vecData.halfDirWS);
-    float powerAnisoRange1 = 1.0f * 200.0f;
-    float specTerm1 = saturate(surface.specularLevel * pow(anisoSpec, powerAnisoRange1));
-
-    // 应用 Fade (极点衰减)
-    float fadeFactorSquared = surface.anisotropyFade * surface.anisotropyFade;
+    float rain_NdotH2 = dotData.NdotH * dotData.NdotH;
+    float rough2 = bsdf.roughness * bsdf.roughness;
+    float deom = rain_NdotH2 * (rough2 - 1.0f) + 1.0f;
+    float deom2 = deom * deom;
+    float ggxRaw = (rough2 != deom2) ? rough2 / deom2 : 1.0f;
+    float ggx = ggxRaw * (rough2 + 9.99999975e-005);     //保证有最小高光
 
     float2 specRampUV;
-    specRampUV.x = specTerm1;
-    specRampUV.y = (0.0f < HdotAniso) ? fadeFactorSquared : 0.0f;
+    specRampUV.x = lerp(ggx, dotData.NdotV2_clamped, _SpecRampIridescentMode);
+    specRampUV.y = surface.perceptualRoughness * (1.0f - surface.metallic);     //这里用不带雨水的感知粗糙度
     float3 specRampColor = SAMPLE_TEXTURE2D_LOD(_SpecRampMap, sampler_SpecRampMap, specRampUV, 0).xyz;
-    float3 specColor_small = surface.anisotropyFade * specTerm1 * specRampColor;
-    return specColor_small;
+    float3 F = bsdf.F0 * specRampColor;
+     F = bsdf.F0;
+    return F;
 }
-
-float3 Hair_F_EndField(EndFieldVecData vecData, EndFieldSurface surface)
-{
-    float3 anisoDirWS2 = ShiftTangent(surface.specBitangent, surface.normalWS_smooth, surface.anisoValue2);
-    float anisoSpec2 = AnisotropicSpecular(anisoDirWS2.xyz, vecData.halfDirWS);
-
-    float powerAnisoRange2 = trunc(max(1.0f  - _AnisotropyRange2, 0.0f) * 200.0f);
-    float specTerm2 = surface.anisotropyFade * pow(anisoSpec2, powerAnisoRange2);
-    float3 specColor_large = specTerm2 * surface.secondSpecMask * _AnisotropyColor2.xyz;
-    return specColor_large;
-}
-
-#define _cb1_13 float4(0.00, 0.00, 0.00, 0.00)   //rainFeature的未知数据
 
 //应用下雨淋湿材质的feature
 void ApplyRainFeature(inout EndFieldSurface surface)
 {
-    float rainStrengthCombined = lerp(_cb1_13.x + _RainEffectIntensity,       _CharacterParams10.y, _CharacterParams10.x);    //主控制强度的变化
-    float wetHeightCombined    = lerp(_cb1_13.z + _WetEffectWorldSpaceHeight, _CharacterParams10.w, _CharacterParams10.x);    //可能是水面深度的控制
-    float wetIntensityCombined = lerp(_cb1_13.y + _WetEffectIntensity,                           1, _CharacterParams10.x);    //不清楚
+    
+        float rainStrengthCombined = lerp(_cb1_13.x + _RainEffectIntensity,       _CharacterParams10.y, _CharacterParams10.x);    //主控制强度的变化
+        float wetHeightCombined    = lerp(_cb1_13.z + _WetEffectWorldSpaceHeight, _CharacterParams10.w, _CharacterParams10.x);    //可能是水面深度的控制
+        float wetIntensityCombined = lerp(_cb1_13.y + _WetEffectIntensity,                           1, _CharacterParams10.x);    //不清楚
 
-    // 2. 计算高度遮罩 (Height Mask)
-    float heightMask = smoothstep(0, 1, 2.85714269 * (wetHeightCombined - surface.positionWS.y + 0.2f));
+        // 2. 计算高度遮罩 (Height Mask)
+        float heightMask = smoothstep(0, 1, 2.85714269 * (wetHeightCombined - surface.positionWS.y + 0.2f));
 
-    float wetnessFactor = heightMask * wetIntensityCombined;                  //这两个是一对，1163是另一个模块
-    float totalRainFactor = heightMask * wetIntensityCombined + rainStrengthCombined ;  //其中heightMask * wetIntensityCombined模块是控制水深度的
+        float wetnessFactor = heightMask * wetIntensityCombined;                  //这两个是一对，1163是另一个模块
+        float totalRainFactor = heightMask * wetIntensityCombined + rainStrengthCombined ;  //其中heightMask * wetIntensityCombined模块是控制水深度的
 
-    if (9.99999975e-005 < totalRainFactor)
-    {
-        float rainMaxParam   = max(wetnessFactor, rainStrengthCombined);
-        float wetAlbedoMix   = 1 - rainMaxParam * 0.2;
+        bool enableRain = totalRainFactor > 9.99999975e-005;
+    #ifdef _SDFLIGHTMAP
+        if (enableRain)
+        {
+            float rainMaxParam    = max(wetIntensityCombined * heightMask, rainStrengthCombined);
 
-        // 应用变暗
-        surface.basecolor = surface.basecolor * wetAlbedoMix;//亮面albedo，有雨水变色、淋湿变色。淋湿区域，深颜色会变浅，浅颜色会变深
-        surface.basecolor_shadow = surface.basecolor_shadow * wetAlbedoMix;   //阴影albedo只受整体湿润影响，因为在暗面不受雨水效果
+            float2 rainDripMapUV1 = float2(surface.baseUV.x, frac(_Time.x * 0.8f) + surface.baseUV.y);
+            float2 rainDripMapUV2 = float2(surface.baseUV.x, frac(_Time.x * 0.8f + 0.005f) + surface.baseUV.y);
+            float4 rainDripMap1 = SAMPLE_TEXTURE2D(_CharacterRainFaceDripTex, sampler_CharacterRainFaceDripTex, rainDripMapUV1);
+            float4 rainDripMap2 = SAMPLE_TEXTURE2D(_CharacterRainFaceDripTex, sampler_CharacterRainFaceDripTex, rainDripMapUV2);
 
-        surface.rainMask = rainMaxParam + 1.0f;//受粗糙度、金属度、开关控制的强度
-    }
+            float4 rainDropletMap = SAMPLE_TEXTURE2D(_CharacterRainFaceDropletTex, sampler_CharacterRainFaceDropletTex, surface.baseUV);
+
+            float _1297 = rainDropletMap.z * rainDripMap1.w;
+
+            float3 dripNormalTS = UnpackNormalRGBNoScale(rainDripMap1);
+            dripNormalTS.z = max(sqrt(1 - min(dot(dripNormalTS.xy, dripNormalTS.xy), 1.0f)), 1.0e-16);
+
+            float _1302 = saturate(rainDropletMap.z * (rainDripMap1.w + rainDripMap2.w));
+            float _1303 = rainMaxParam * _1302;
+            float _1304 = rainMaxParam * (rainDropletMap.z * rainDripMap1.z);
+
+            float _1317 = mad(dripNormalTS.y, 0.5f, 0.5f) * 1.25f;
+            float _1320 = smoothstep(0.0f, 1.0f, _1317);
+            float _1328 = lerp(_1320, 1.0f, saturate(rainDropletMap.z * (rainDripMap2.w - rainDripMap1.w)));
+            float _1331 = lerp(1.0f, 0.8f, _1328);
+
+            float3 mixNormalWS_nlz = surface.faced * normalize(TransformTangentToWorld(dripNormalTS, surface.TBNWS));
+
+            surface.perceptualRoughness_rain = 0.01f;
+            // surface.basecolor = surface.basecolor;
+            // surface.basecolor_shadow = surface.basecolor_shadow;     //脸部不做雨水压暗的颜色
+            surface.perceptualRoughness = 0.3f;//带雨水、淋湿的粗糙度
+            surface.specularLevel = mad(rainMaxParam * saturate(mad(_1303, 2.0f, _1304)), 3.0f -  surface.SDFMask_YChannel * _Specular, surface.specularLevel);
+            surface.normalWS_withRain = mixNormalWS_nlz;  //混合了雨水的法线
+
+            surface.occlusion = surface.occlusion * mad(lerp(_1331, 0.90f, surface.SDFMask_YChannel), _1303, mad(  - _1302, rainMaxParam, 1.0f));
+            surface.rainMask = saturate(mad(_1302, rainMaxParam, _1304));//受粗糙度、金属度、开关控制的强度
+        }
+    #else
+        float rainMaxParam = max(wetIntensityCombined * heightMask, rainStrengthCombined);
+        surface.perceptualRoughness = enableRain ? lerp(surface.perceptualRoughness, 0.5f, rainMaxParam) : surface.perceptualRoughness;
+        surface.specularLevel = enableRain ? lerp(surface.specularLevel, 1.0f, rainMaxParam) : surface.specularLevel * DEFAULT_SPECULAR_VALUE;
+    #endif
 }
 
 //用用特殊效果feature
@@ -551,7 +752,7 @@ float3 ApplyVFXFeature(EndFieldVecData vecData, EndFieldSurface surface)
         // 计算基础透明度参考值
         float globalAlphaRef = _VFXColor.w * _VFXColorAlpha;
         float2 MapUV = _VFXMainUVSet > 0.5f ? surface.baseUV1 : surface.baseUV;
-
+        
         float2 VFXMainUV = MapUV + _VFXParams0.w * _VFXSpecialParam.zw;
         VFXMainUV = TRANSFORM_TEX(VFXMainUV, _VFXSpecialMainTex);
         float4 VFXMainMap = SAMPLE_TEXTURE2D(_VFXSpecialMainTex, sampler_VFXSpecialMainTex, VFXMainUV);
@@ -560,7 +761,7 @@ float3 ApplyVFXFeature(EndFieldVecData vecData, EndFieldSurface surface)
         VFXBlendUV = VFXBlendUV + _VFXParams0.w * _VFXSpecialParam.xy;
         VFXBlendUV = TRANSFORM_TEX(VFXBlendUV, _VFXSpecialBlendTex);
         float4 VFXBlendMap = SAMPLE_TEXTURE2D(_VFXSpecialBlendTex, sampler_VFXSpecialBlendTex, VFXBlendUV);
-
+        
         // 通道选择: 根据 .x 参数在 Flow图的 A通道 和 R通道 之间插值
         float flowChannel = lerp(VFXBlendMap.w, VFXBlendMap.x, _UseVFXMainTexAsAlpha);
         // 计算不透明度遮罩 (Opacity Mask)
@@ -572,7 +773,7 @@ float3 ApplyVFXFeature(EndFieldVecData vecData, EndFieldSurface surface)
         // 合成基础火焰颜色 (baseFireColor Base Color)
         // Part A: 主图RGB * 不透明度 * TintColor
         // Part B: 流动图RGB * VFX主色 * 强度乘数(.z)
-        float3 baseFireColor = VFXMainMap.xyz * opacityMask * _VFXBlendTint.xyz
+        float3 baseFireColor = VFXMainMap.xyz * opacityMask * _VFXBlendTint.xyz 
                             + flowBaseColor.xyz * _VFXColor.xyz * _VFXColorIntensity;
 
         // 计算溶解阈值 (Mapping 0..1 to -1.01..1.02)
@@ -588,14 +789,14 @@ float3 ApplyVFXFeature(EndFieldVecData vecData, EndFieldSurface surface)
         // 计算视线与法线的点积 (Safe NdotV)
         float VdotN_safe = saturate(dot(vecData.viewDirWS, surface.normalWS_raw/* 这里原本是normalWS_raw_safe ，原始法线的SafeNormalize版本*/) + _VFXFresnelBias);
         VdotN_safe = pow(VdotN_safe, _VFXFresnelPower);
-
+        
         // 菲涅尔反转控制 (Flip)
         float vfxFresnel = lerp(1 - VdotN_safe, VdotN_safe, _VFXFresnelFlip);
         // 计算最终流动遮罩 (Flow Mask)
         float visibilityMask = lerp(1.0f, vfxFresnel, _VFXFresnelAffectOpacity);    //菲涅尔是否影响透明度
         float dissolveCutout = saturate(VFXMainMap.x - dissolveThreshold);
         float flowMask = visibilityMask * saturate(flowChannel * globalAlphaRef * dissolveCutout);
-
+        
         float3 vfxFinalColor = lerp(fireColorWithEdge, _VFXFresnelColor.xyz, vfxFresnel * _VFXFresnelColor.w) * flowMask;  //r10.xyz 熔岩颜色
         float3 effectColor = surface.emission + vfxFinalColor;
     #else
@@ -604,55 +805,37 @@ float3 ApplyVFXFeature(EndFieldVecData vecData, EndFieldSurface surface)
     return effectColor;
 }
 
-//rim feature
+//手动放置rim灯光位置的feature
 float3 ApplyRimFeature(float3 diffuseSat, EndFieldVecData vecData, EndFieldShadowData shadowData, EndFieldSurface surface)
 {
-    float3 rimLightPosWS = UNITY_MATRIX_M._m03_m13_m23; //_RimLightPosWS
-    float3 customDirWS;
-    customDirWS.xz = surface.positionWS.xz - rimLightPosWS.xz;
-    customDirWS.y = 0;
-    customDirWS = SafeNormalize(customDirWS);
-
     bool enable_Rim = cmp(0.00999999978 < _CharacterParams8.w);
     //rim
-    float3 normalVS = mul((float3x3)UNITY_MATRIX_V, surface.normalWS);
-    float3 normalVS_nlz = 0;
-    normalVS_nlz.xy = normalize(normalVS.xy);
+    float inv_VdotN = 1.0f - abs(dot(vecData.viewDirWS, surface.normalWS));
 
-    //cb0_v67 2560.00, 1440.00, 1.0003906, 1.0006944 1072 float4
-    float4 scaledScreenParams = GetScaledScreenParams(); // CB0_m0[67u].xyzw
-    float4 screenParams = _ScreenParams; // CB0_m0[62u].xyzw
-    float aspectRatio = scaledScreenParams.y / scaledScreenParams.x;
+    float rimFactor1 = 0.8f - _CharacterParams7.w * 0.6f;
+    float rimFactor2 = 0.9f - _CharacterParams7.w * 0.40f;
+    float rimFactor3 = _CharacterParams7.w * 10.0f - 3.0f;
+    
+    float inv_VdotN_nlz = normalizeMinMax(inv_VdotN, rimFactor1, rimFactor2);
+    float rim_VdotN_smt = smoothstep(0, 1, inv_VdotN_nlz);
 
-    float2 offsetUV = float2(
-        normalVS_nlz.x * aspectRatio * _CharacterParams7.w * 0.006f,
-        normalVS_nlz.y * 1.0f        * _CharacterParams7.w * 0.006f
-        );
+    float _2277 = ((abs(vecData.cameraForwardOS.z) - 0.90f) * 10.0f);
+    float _2280_smt = smoothstep(0.0f, 1.0f, _2277);
 
-    // cb0_v62 2560.00, 1440.00, 0.0003906, 0.0006944 992 float4
-    // float2 currentScreenUV = i.positionHCS.xy * screenParams.zw;
-    float2 currentScreenUV = surface.screenUV;
-    float2 sampleUV = currentScreenUV + offsetUV;
+    float _2295 = _2280_smt * rim_VdotN_smt;
 
-    float2 clampedSampleUV = clamp(sampleUV.xy, scaledScreenParams.zw - 1.0f, 2.0f - scaledScreenParams.zw);
-
-
-    float rawDepthSample = SAMPLE_TEXTURE2D_X_LOD(_CameraDepthTexture, sampler_LinearClamp, clampedSampleUV, 0.0f).x;
-
-    float linearDepthSample = LinearEyeDepth(rawDepthSample, _ZBufferParams);
-    float linearDepthCurrent = surface.positionHCS.w;
-    float rimRange = (linearDepthSample - linearDepthCurrent - 0.1f) * 10.0f;
-    float rimRange_smt = smoothstep(0, 1, rimRange);
+    float _2296 = max(_2280_smt, (dot(vecData.cameraForwardWS, vecData.cameraLeftWS) < -0.01f) ? 1.0f : 0.0f);
+    float rimFinal_VdotN_smt = lerp(_2295, _2296 * surface.noseLightMask_WChannel, saturate(rimFactor3));
 
     //dot distance
-    float rim_atten = saturate(1 + dot(customDirWS.xz, vecData.cameraLeftWS.xz));
+    float rim_atten = saturate(1 + dot(surface.rimDirWS_XZ.xz, vecData.cameraLeftWS.xz));
     rim_atten = Min3(rim_atten, surface.occlusion, shadowData.char);
 
     float NdotRimDir_clamp = saturate(dot(vecData.cameraLeftWS, surface.normalWS));
 
     //mix rim color
     float3 rimDiffuse = lerp(0.25, diffuseSat, _CharacterParams6.w) * NdotRimDir_clamp;
-    float3 rimColor = rim_atten * rimRange_smt * _CharacterParams8.xyz * _CharacterParams8.w;      //_cb0_168.xyz: rim color, _cb0_168.w:rim intensity
+    float3 rimColor = rim_atten * rimFinal_VdotN_smt * _CharacterParams8.xyz * _CharacterParams8.w;      //_cb0_168.xyz: rim color, _cb0_168.w:rim intensity
     float3 rimFinalColor = rimDiffuse * rimColor;
     rimFinalColor = enable_Rim ? rimFinalColor : 0;
     return rimFinalColor;
@@ -672,20 +855,20 @@ float3 ApplySHRimFeature(float3 diffuseSat, float3 saturatedDirLightColor, EndFi
     // 在场景阴影中(shadowData.scene=0)倾向于使用1
     // 在亮部(shadowData.scene=1)倾向于使用负灯光与视角的dot，也就是看向主光方向（逆光）时才是1
     float backlightFactor = lerp(1, dotData.NgtLdotForwardWS_clamped, shadowData.scene);
-
+    
     // 法线与光照方向的匹配蒙版 (Normal-Light Alignment)
     // 在场景阴影中(shadowData.scene=0)倾向于使用环境光方向的dot
     // 在亮部(shadowData.scene=1)倾向于使用主光的dot
     float lightRangeDot = 0.5 - dotData.NdotL_XZ * (dotData.NdotL_XZ * 0.5 - 1);    //拟合曲线
     float rimLightDirectionMask = saturate(lerp(SHdotN, lightRangeDot, shadowData.scene));
     // return float4(SHdotN.xxx, 1);
-
+    
     // 固有色亮度蒙版 (Albedo Brightness Mask)
     // 在场景阴影中(shadowData.scene=0)倾向于使用1
     // 在亮部(shadowData.scene=1)倾向于使用钳制的颜色权重曲线， 防止边缘光出现在本来就很黑的材质上（这会让黑色看起来发灰）
     float albedoBrightnessMask = smoothstep(0, 1, -16.666666 * (Luminance(bsdf.diffuse) - 0.1f));
     albedoBrightnessMask = lerp(1, albedoBrightnessMask, shadowData.scene);
-
+    
     // [Color] 边缘光颜色源 (Rim Source Color)
     // 在场景阴影中(shadowData.scene=0)倾向于使用环境光(SHavgColor)
     // 在亮部(shadowData.scene=1)倾向于使用主光(directionalLightColor)
@@ -704,16 +887,28 @@ float3 ApplySHRimFeature(float3 diffuseSat, float3 saturatedDirLightColor, EndFi
 //endregion
 
 //region 初始化数据
+
+    // skin shadowColorLut params
+    #define LUT_A 0.03125f  // 1.0/32
+    #define LUT_B 0.0302734375f  // 31/1024
+    #define LUT_C 0.00048828125f  // 0.5/1024
+    #define LUT_D 0.96875f  // 31/32
+    #define LUT_E 0.015625f  // 0.5/32
+
 void InitializeEndFieldLightData(Light light,
     inout EndFieldLightData lightData)
 {
+
     lightData.useStandardColor = _CharacterParams5.w;
-    lightData.standardColor = lerp(light.color, _CharacterParams5.xyz, lightData.useStandardColor);
+    // lightData.standardColor = _CharacterParams5.xyz;
+    lightData.standardSkinColor = _CharacterParams11.xyz;
+    // lightData.standardColor = lerp(light.color, _CharacterParams5.xyz, lightData.useStandardColor);
     lightData.useStandardIntenstity = _CharacterParams11.w;
     lightData.direction = light.direction;
     lightData.attenuation = light.distanceAttenuation;  //EndField里是1.6243868
     lightData.intensity = lerp(lightData.attenuation, 1.0f, lightData.useStandardIntenstity);
-    lightData.color = lightData.standardColor * lightData.intensity;
+    // lightData.color = lightData.standardColor * lightData.intensity;
+    lightData.color = lerp(light.color, lightData.standardSkinColor, lightData.useStandardColor) * lightData.intensity;
 }
 
 void IntializeEndFieldShadow(EndFieldSurface surface,
@@ -745,11 +940,11 @@ void IntializeEndFieldShadow(EndFieldSurface surface,
     float sceneShadowAtten = lerp(shadowMaskMixed, 1, sceneShadowIntensity_volume);
     shadowData.char = shadowAttenuation_char;
     shadowData.scene = sceneShadowAtten;
-    shadowData.scene = shadowAttenuation_scene;     //test code
+    // shadowData.scene = shadowAttenuation_scene;     //test code
     // shadowData.scene = step(0.5, surface.screenUV.y);    //test code
 }
 
-void InitializeEndFieldVecData(Varyings i, EndFieldLightData lightData, EndFieldShadowData shadowData, EndFieldSurface surface,
+void InitializeEndFieldVecData(Varyings i, EndFieldLightData lightData, EndFieldShadowData shadowData,
     inout EndFieldVecData vecData)
 {
     float  useCustomLight = _CharacterParams1.w;
@@ -759,20 +954,18 @@ void InitializeEndFieldVecData(Varyings i, EndFieldLightData lightData, EndField
     vecData.viewDirWS = SafeNormalize(i.viewDirWS.xyz);
     vecData.cameraForwardWS = UNITY_MATRIX_I_V._m02_m12_m22;//UNITY_MATRIX_I_V(会同步scene的矩阵)，但_InvViewMatrix只与游戏相机相关
     vecData.cameraForwardWS_XZ = normalize(float3(vecData.cameraForwardWS.x, 0, vecData.cameraForwardWS.z));
+    vecData.cameraForwardOS = TransformWorldToObjectDir(vecData.cameraForwardWS, true);
+    vecData.cameraForwardOS_XZ = normalize(float3(vecData.cameraForwardOS.x, 0, vecData.cameraForwardOS.z));
     float3 rimAxis = _CharacterParams9.xyz;
     vecData.cameraLeftWS = SafeNormalize(cross(vecData.cameraForwardWS, rimAxis));
-
+    
     float3 shiftedLightDirOffset;
     shiftedLightDirOffset.x = vecData.cameraForwardWS.x;
     shiftedLightDirOffset.y = lerp(0.5f, vecData.lightDirWS.y, shadowData.scene);
     shiftedLightDirOffset.z = vecData.cameraForwardWS.z;
-    float3x3 matrix_m = float3x3(UNITY_MATRIX_I_M[0].xyz, UNITY_MATRIX_I_M[1].xyz, UNITY_MATRIX_I_M[2].xyz);
-    shiftedLightDirOffset = mul(matrix_m, shiftedLightDirOffset);
     float3 lightDirFinal = vecData.lightDirWS * shadowData.scene + shiftedLightDirOffset * 2.0f;//果然是使用了跟随相机前向的跟踪高光方向
     float3 halfDirWS = SafeNormalize(lightDirFinal) + vecData.viewDirWS;
     vecData.halfDirWS = SafeNormalize(halfDirWS);
-
-    vecData.reflectDirWS = reflect(-vecData.viewDirWS, surface.normalWS_withRain);
 }
 
 void IntializeEndFieldSurface(Varyings i, uint facing,
@@ -786,84 +979,121 @@ void IntializeEndFieldSurface(Varyings i, uint facing,
     surface.positionHCS = i.positionHCS;
     surface.screenUV = GetNormalizedScreenSpaceUV(i.positionHCS.xy);
     surface.screenPos = (uint2)i.positionHCS.xy;
-
+    
     float4 mainTex = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, surface.baseUV);
-    float4 pbrMask = SAMPLE_TEXTURE2D(_PBRMask, sampler_PBRMask, surface.baseUV);
-    // float3 bumpTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, surface.baseUV), _NormalScale);
-    float4 bumpMap = SAMPLE_TEXTURE2D(_SplitNormalMap, sampler_SplitNormalMap, surface.baseUV);
-    float3 bumpTS = 0;
-    float3 bumpTS_smooth = 0;
-    UnpackHairNormalMap(bumpTS, bumpTS_smooth,
-        bumpMap, _NormalScale, _SpecBumpScale);
-    float4 lineMap = SAMPLE_TEXTURE2D(_LineMap, sampler_LineMap, TRANSFORM_TEX(surface.baseUV, _LineMap));
-    // float3 emissionTex = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap, surface.baseUV).xyz;
+    // float4 pbrMask = SAMPLE_TEXTURE2D(_PBRMask, sampler_PBRMask, surface.baseUV);
+
 
     //params part
     surface.basecolor = mainTex.rgb * _BaseColor.rgb;
     surface.alpha     = mainTex.a * _BaseColor.a;
     float3 basecolor_shadow = surface.basecolor * _ShadowColorBrightness;
     surface.basecolor_shadow = lerp(Luminance(basecolor_shadow), basecolor_shadow, _ShadowColorSaturation);
-    surface.metallic = 0.0f;// lerp(0, 1, _Metallic);
-    surface.specularLevel = pbrMask.g;
-    // surface.anisotropy = 0;
-    surface.perceptualsmoothness = 0;
-    surface.perceptualRoughness = lerp(0, _Roughness, 1 - surface.perceptualsmoothness);
-    // surface.perceptualRoughness_rain = 0.01f;
-    surface.rainMask = 1.0f;
-    surface.occlusion = lerp(1 - _Occlusion, 1, pbrMask.b);
-    // surface.emission         = emissionTex * _EmissionCol.xyz * _EmissionIntensity;
+    surface.metallic = _Metallic;
+    surface.specularLevel = _Specular;
+    surface.anisotropy = 0;
+    surface.perceptualsmoothness = 1 - _Roughness;
+    surface.perceptualRoughness = _Roughness;
+    surface.perceptualRoughness_rain = 0.01f;
+    surface.rainMask = 0.0f;
+    surface.occlusion = lerp(1 - _Occlusion, 1, mainTex.a);
 
-    surface.anisoValue = _AnisotropyValue * 2.0f - 1.0f;
-    surface.anisoValue2 = _AnisotropyValue2 * 2.0f - 1.0f;
+    surface.SDFMask_YChannel       = 1.0;   //skin 为 1.0
+    surface.FlatSHMask_ZChannel    = 1.0;
 
-    surface.proceduralTangentMask = pbrMask.x;
-    surface.secondSpecMask = pbrMask.w;
-    surface.anisotropyFade = 0;
+    #ifdef _SDFLIGHTMAP
+        float4 sdfMaskMap = SAMPLE_TEXTURE2D(_SDFMask, sampler_SDFMask, surface.baseUV);
+        surface.RimMask_XChannel       = sdfMaskMap.x;
+        surface.SDFMask_YChannel       = sdfMaskMap.y;
+        surface.FlatSHMask_ZChannel    = sdfMaskMap.z;
+        surface.noseLightMask_WChannel = sdfMaskMap.w;
+        surface.specularLevel          = surface.SDFMask_YChannel * _Specular;
+    #endif
 
-    surface.hairLine = lineMap.x;
+    #ifdef _SHADOW_LUT_TEX
+        // 将 Linear 空间颜色转换为 sRGB 空间
+        float3 colorSRGB = LinearToSRGB(surface.basecolor);
+        // 假设 LUT 大小为 32x32x32，被平铺在一张 1024x32 的 2D 纹理上
+        float COLORS = 32.0;
+        float COLORS_MINUS_1 = 31.0;
 
-    surface.specBitangent = 0;
+        // 计算 Blue 通道在 LUT 条带中的索引 (对应 Z 轴)
+        float blueValue = colorSRGB.b * COLORS_MINUS_1; // 0 ~ 31
+        float sliceIndex = floor(blueValue);            // 当前切片索引
+        float zFraction = blueValue - sliceIndex;
+
+        // 计算在单个 32x32 切片内的 UV，包含半像素偏移以防采样溢出
+        float2 uvInSlice;
+        uvInSlice.x = colorSRGB.r * LUT_B + LUT_C;
+        uvInSlice.y = colorSRGB.g * LUT_D + LUT_E;
+
+        float2 shadowLutMapUV1 = uvInSlice;
+        shadowLutMapUV1.x += sliceIndex * LUT_A;
+        float4 shadowLutMap1         = SAMPLE_TEXTURE2D_LOD(_ShadowLutTex, sampler_ShadowLutTex, shadowLutMapUV1, 0.0f);
+
+        float2 shadowLutMapUV2 = shadowLutMapUV1;
+        shadowLutMapUV2.x += LUT_A;
+        float4 shadowLutMap2         = SAMPLE_TEXTURE2D_LOD(_ShadowLutTex, sampler_ShadowLutTex, shadowLutMapUV2, 0.0f);
+        surface.basecolor_shadow     = lerp(shadowLutMap1.xyz, shadowLutMap2.xyz, zFraction);
+    #endif
+    
+    #ifdef _EMISSION
+        float3 emissionTex = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap, surface.baseUV).xyz;
+        surface.emission         = emissionTex * _EmissionCol.xyz * _EmissionIntensity;
+    #endif
 
     //vector part
     float normalLength = length(i.normalWS.xyz);
     float invNormalLength = 1.0 / max(FLT_MIN, normalLength);
+    
+    surface.faced = facing ? 1 : _BackFaceNormalFlip * 2 - 1;
 
-    float tangentWS_w = i.tangentWS.w > 0 ? 1 : -1;
-    tangentWS_w *= GetOddNegativeScale();
-
-    float faced = facing ? 1 : _BackFaceNormalFlip * 2 - 1;
-
-    surface.normalWS_raw         = i.normalWS.xyz * rcp(normalLength) * faced;
-    surface.tangentWS_raw        = i.tangentWS.xyz * invNormalLength;
-    surface.bitangentWS_raw      = cross(i.normalWS.xyz, i.tangentWS.xyz) * tangentWS_w * invNormalLength;
-    surface.tangent_W            = i.tangentWS.w;
-    surface.TBNWS                = float3x3(surface.tangentWS_raw,
-                                            surface.bitangentWS_raw,
-                                            i.normalWS.xyz * invNormalLength);
     surface.normalOS             = i.normalOS;
-    surface.normalWS             = normalize(TransformTangentToWorld(bumpTS, surface.TBNWS)) * faced;
-    surface.tangentWS            = 0;
-    surface.bitangentWS          = 0;
+    surface.normalWS_raw         = i.normalWS.xyz * rcp(normalLength) * surface.faced;
+    surface.normalWS_raw_XZ      = SafeNormalize(float3(surface.normalWS_raw.x, 0, surface.normalWS_raw.z));
+    
+    //if (face)
+    surface.normalWS_withRain    = surface.normalWS_raw;
 
-    float3x3 TBNWS               = float3x3(surface.tangentWS_raw,
-                                            surface.bitangentWS_raw,
-                                            surface.normalWS_raw);
-    surface.normalWS_smooth             = normalize(TransformTangentToWorld(bumpTS_smooth, TBNWS));
+    #ifdef _NORMALMAP
+        float3 bumpTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, surface.baseUV), _NormalScale);
+        
+        float tangentWS_w = i.tangentWS.w > 0 ? 1 : -1;
+        tangentWS_w *= GetOddNegativeScale();
+        
+        surface.tangentWS_raw        = i.tangentWS.xyz * invNormalLength;
+        surface.bitangentWS_raw      = cross(i.normalWS.xyz, i.tangentWS.xyz) * tangentWS_w * invNormalLength;
+        surface.tangent_W            = i.tangentWS.w;
+        
+        surface.TBNWS                = float3x3(surface.tangentWS_raw,
+                                                surface.bitangentWS_raw,
+                                                i.normalWS.xyz * invNormalLength);
+        
+        surface.normalWS             = normalize(TransformTangentToWorld(bumpTS, surface.TBNWS)) * surface.faced;
+        surface.tangentWS            = 0;
+        surface.bitangentWS          = 0;
 
-    surface.normalWS_withRain    = surface.normalWS;
+        surface.normalWS_withRain    = surface.normalWS;
+    #endif
+
+    float3 rimLightPosWS = UNITY_MATRIX_M._m03_m13_m23; //_RimLightPosWS
+    float3 rimDirWS;
+    rimDirWS.xz = surface.positionWS.xz - rimLightPosWS.xz;
+    rimDirWS.y = 0;
+    surface.rimDirWS_XZ = SafeNormalize(rimDirWS);
 }
 
-void InitializeEndFieldDotData(EndFieldVecData vecData, EndFieldSurface surface,
+void InitializeEndFieldDotData(EndFieldVecData vecData, EndFieldSurface surface, 
     inout EndFieldDotData dotData)
 {
-    dotData.NdotL = dot(surface.normalWS, vecData.lightDirWS);  //这里没有用withRain的可能是简化细碎的雨水细节
+    dotData.NdotL = dot(surface.normalWS_withRain, vecData.lightDirWS);
     dotData.NdotL_XZ = dot(surface.normalWS.xz, vecData.lightDirWS.xz);  //这里没有用withRain的可能是简化细碎的雨水细节
     dotData.NdotH = dot(surface.normalWS_withRain, vecData.halfDirWS);
     dotData.NdotV = dot(surface.normalWS_withRain, vecData.viewDirWS);
-
+    
     dotData.VdotH = 0;
     dotData.LdotH = 0;
-
+    
     dotData.NdotL_clamped = saturate(dotData.NdotL);
     dotData.NdotV_clamped = saturate(dotData.NdotV);
     dotData.NdotV2_clamped = dotData.NdotV_clamped * dotData.NdotV_clamped;
@@ -871,7 +1101,8 @@ void InitializeEndFieldDotData(EndFieldVecData vecData, EndFieldSurface surface,
     dotData.NgtLdotForwardWS_clamped = saturate(-dot(vecData.lightDirWS_XZ.xz, vecData.cameraForwardWS_XZ.xz));
 }
 
-void SurfaceConvertToBSDF(EndFieldVecData vecData, EndFieldDotData dotData, EndFieldSurface surface, inout EndFieldBSDF bsdf)
+void SurfaceConvertToBSDF(EndFieldVecData vecData, EndFieldDotData dotData,
+    inout EndFieldSurface surface, inout EndFieldBSDF bsdf)
 {
     bsdf.diffuse = ComputeDiffuseColor(surface.basecolor, surface.metallic) * 0.96f;  //0.96f is EndField Feature
     //阴影
@@ -879,7 +1110,7 @@ void SurfaceConvertToBSDF(EndFieldVecData vecData, EndFieldDotData dotData, EndF
     //更深的阴影
     bsdf.diffuse_shadow2 = bsdf.diffuse_shadow * _CharacterParams0.z * 0.65f;  //0.65f is EndField Feature
     bsdf.diffuse_shadow2 = lerp(Luminance(bsdf.diffuse_shadow2), bsdf.diffuse_shadow2, 1.2f);
-
+    
     bsdf.specularLevel = surface.specularLevel * DEFAULT_SPECULAR_VALUE;
     bsdf.F0 = ComputeFresnel0(surface.basecolor, surface.metallic, bsdf.specularLevel);
     bsdf.F90 = 1;
@@ -890,8 +1121,10 @@ void SurfaceConvertToBSDF(EndFieldVecData vecData, EndFieldDotData dotData, EndF
     bsdf.roughness2 = bsdf.roughnessT * bsdf.roughnessT;
     bsdf.occlusion = surface.occlusion;
 
-    bsdf.ramp_NdotL = SampleRampColor_NdotL(vecData, dotData);
-    bsdf.ramp_NdotV = SampleRampColor_NdotV(vecData, surface);
+    ApplySDFFeatureToSurfaceData(vecData, surface);
+    
+    bsdf.ramp_NdotL = SampleRampColor_NdotL(vecData, dotData, surface);
+    // bsdf.ramp_NdotV = SampleRampColor_NdotV(vecData, surface);
 }
 
 //region 环境镜面反射
@@ -916,7 +1149,7 @@ float3 EnvBRDF(EndFieldDotData dotData, EndFieldSurface surface, EndFieldBSDF bs
     float termA_Num   = dot(float2(termA_Num_X, termA_Num_Y), float2(const1, envBRDF_roughness2));
 
     float termA_Den_X = dot(float3(3.596849918f, -1.367720007f, const1), float3(dotData.NdotV2_clamped, rain_NdotV3, const1));
-    float termA_Den_Y = dot(float3(-16.317399978f, const1, 9.229490280f), float3(dotData.NdotV2_clamped, 9.04401f, rain_NdotV3));
+    float termA_Den_Y = dot(float3(-16.317399978f, const1, 9.229490280f), float3(dotData.NdotV2_clamped, 9.04401f, rain_NdotV3)); 
 
     float termA_Den_Z = dot(float3(1.0f, 19.788600921f, -20.212299346f), float3(5.56589f, dotData.NdotV2_clamped, rain_NdotV3));
     float termA_Den   = dot(float3(termA_Den_X, termA_Den_Y, termA_Den_Z), float3(const1, envBRDF_roughness2, envBRDF_roughness6));
@@ -942,7 +1175,7 @@ float3 EnvBRDF(EndFieldDotData dotData, EndFieldSurface surface, EndFieldBSDF bs
     // 5. 多重散射能量补偿 (Multi-Scattering Energy Compensation)
     // 在高粗糙度下，单次散射会丢失能量导致边缘变暗。这里进行经验性的补偿。
     // integratedEnergy = Scale + Bias 近似代表了对于白色 F0 的总反射能量积分 (Integrated BRDF for F0=1)
-    float integratedEnergy = dfgScale + dfgBias;
+    float integratedEnergy = dfgScale + dfgBias; 
 
     // 计算缺失的能量比例，并归一化
     // (1 - E) / E 是一种常见的用于推导多重散射因子的形式
@@ -969,21 +1202,134 @@ real PerceptualRoughnessToMipmapLevel_EndField(real perceptualRoughness, uint ma
     return mip;
 }
 
-float3 EnvSpecular(EndFieldVecData vecData, EndFieldSurface surface)
+float3 EnvSpecular(inout EndFieldVecData vecData, EndFieldSurface surface)
 {
+    vecData.reflectDirWS = reflect(-vecData.viewDirWS, surface.normalWS_withRain);
     float mip = PerceptualRoughnessToMipmapLevel_EndField(surface.perceptualRoughness, 6/*EndField is 6*/);
     float3 envSpecular = SAMPLE_TEXTURECUBE_LOD(_IndirSpecCubemap, sampler_LinearRepeat, vecData.reflectDirWS, mip).xyz;
     return envSpecular;
 }
 
-//region skin shadowColorLut
-#define LUT_A 0.03125f  // 1.0/32
-#define LUT_B 0.0302734375f  // 31/1024
-#define LUT_C 0.00048828125f  // 0.5/1024
-#define LUT_D 0.96875f  // 31/32
-#define LUT_E 0.015625f  // 0.5/32
+
 
 //endregion
+
+// 雨水效果核心参数（可根据需求调整）
+#define RAIN_NOISE_SCALE_1 30.0f      // 噪声频率1（控制雨滴密度）
+#define RAIN_NOISE_SCALE_2 45.345600128173828125f   // 噪声频率2（补充细节）
+#define RAIN_TIME_SPEED_1 3.0f        // 雨滴下落速度1
+#define RAIN_TIME_SPEED_2 4.345600128173828125f     // 雨滴下落速度2
+#define RAIN_DROP_SIZE_MIN 0.6f       // 雨滴最小尺寸系数
+#define RAIN_DROP_SIZE_MAX 1.0f       // 雨滴最大尺寸系数
+#define RAIN_ROUGHNESS_WET 0.1f       // 湿润区域粗糙度（越小越光滑）
+#define RAIN_METALLIC_WET 1.0f        // 湿润区域金属度（越大反射越强）
+
+//region rain feature func
+
+// 生成伪随机数（输入2D坐标，输出0~1随机值）
+float2 GenerateRandom2D(float2 gridPos)
+{
+    // 随机数种子（固定值，保证随机性）
+    float2 randSeed = float2(123.339996337890625f, 456.209991455078125f);
+    float2 gridRand = frac(gridPos * randSeed);
+    // 点积强化随机性
+    gridRand += dot(gridRand, gridRand + 34.345001220703125f).xx;
+    return frac(float2(gridRand.x * gridRand.y, gridRand.x + gridRand.y));
+}
+
+// 计算单组雨滴强度（输入：坐标、时间系数、尺寸系数，输出：雨滴强度+偏移）
+float2 CalculateRainDropIntensity(float2 coord, float timeFactor, out float2 dropOffset)
+{
+    // 1. 划分噪声格子
+    float2 gridPos = floor(coord);
+    float2 gridUV = frac(coord) - 0.5f;
+
+    // 2. 生成格子内随机值
+    float2 randVal1 = GenerateRandom2D(gridPos);
+    float2 randVal2 = GenerateRandom2D(gridPos + 114.51399993896484375f); // 偏移格子避免重复
+
+    // 3. 雨滴中心随机偏移
+    dropOffset = ((randVal2 * 2.0f - 1.0f) * 0.25f) + (coord - gridPos) - 0.5f;
+    // 雨滴形状非对称拉伸（模拟下落轨迹）
+    dropOffset.x *= 1.25f;
+    dropOffset.y *= dropOffset.y < 0.0f ? 1.25f : 0.75f;
+
+    // 4. 雨滴范围判断（距离中心越近强度越高）
+    float dropLength = length(dropOffset);
+    float dropSize = 0.25f * lerp(0.60f, 1.0f, randVal1.x);
+    float rangeIntensity = smoothstep(dropSize, 0.0f, dropLength);
+
+    // 5. 时间窗口判断（模拟雨滴下落的生命周期）
+    float timeCycle = frac(timeFactor + randVal1.x);
+    float2 timeIntensity;
+    timeIntensity.x = smoothstep(0.2f, 0.22f, timeCycle) * smoothstep(0.5f, 0.2f, timeCycle);
+
+
+    // 6. 最终雨滴强度（范围+时间双重过滤）
+    timeIntensity.x *= step(0.001f, rangeIntensity);
+    timeIntensity.y = randVal2.y;
+
+    //输出
+    dropOffset = clamp(dropOffset / dropSize, -1.0f, 1.0f) * timeIntensity.x * lerp(0.5f, 1.0f, randVal2.x);
+    // return float2(dropLength, 0);
+    return timeIntensity;
+}
+
+void InitialVecData(Varyings i, uint facing, float3 bumpTS, inout VecData vecData)
+{
+    vecData.positionHCS = i.positionHCS;
+    vecData.positionWS = i.positionWS;
+    vecData.normalWS_raw = SafeNormalize(i.normalWS.xyz);
+    vecData.bitangentWS_raw = SafeNormalize(i.bitangentWS.zxy);
+    vecData.normalWS_raw = facing > 0 ? vecData.normalWS_raw : -vecData.normalWS_raw;
+    float3x3 TBN = float3x3(i.tangentWS.xyz, i.bitangentWS.xyz, vecData.normalWS_raw.xyz);
+                
+    vecData.normalWS = SafeNormalize(TransformTangentToWorld(bumpTS, TBN));
+    vecData.bitangentWS = normalize(vecData.bitangentWS_raw.zxy);
+    vecData.tangentWS = cross(vecData.bitangentWS, vecData.normalWS);
+    vecData.bitangentWS = cross(vecData.normalWS, vecData.tangentWS);
+
+    vecData.viewDirWS = SafeNormalize(i.viewDirWS.xyz);
+    vecData.reflectDirWS = reflect(vecData.viewDirWS, vecData.normalWS);
+}
+
+void InitialDotData(VecData vecData, inout DotData dotData)
+{
+    float ndotl = dot(vecData.normalWS, vecData.lightDirWS);
+    dotData.ndl = max(0, ndotl);
+    float ndoth = dot(vecData.normalWS, vecData.halfDirWS);
+    dotData.ndh = max(0, ndoth);
+    float vdoth = dot(vecData.viewDirWS, vecData.halfDirWS);
+    dotData.vdh = max(0, vdoth);
+    #ifdef _SHADOW_RAMP
+    float ldoth = dot(vecData.lightDirWS, vecData.halfDirWS);    //dot(lightDirWS, halfDir)
+    dotData.ldh = max(0, ldoth);
+    #endif
+}
+
+void UnpackHairNormalMap(inout real3 normal1, inout real3 normal2,
+    real4 packedNormal, real scale1 = 1.0, real scale2 = 1.0
+    )
+{
+    real3 nor1, nor2;
+    nor1.xy = packedNormal.xy * 2.0 - 1.0;
+    nor1.z = max(1.0e-16, sqrt(1.0 - saturate(dot(nor1.xy, nor1.xy))));
+    nor1.xy *= scale1;
+    normal1 = nor1;
+    
+    nor2.xy = packedNormal.zw * 2.0 - 1.0;
+    nor2.z = max(1.0e-16, sqrt(1.0 - saturate(dot(nor2.xy, nor2.xy))));
+    nor2.xy *= scale2;
+    normal2 = nor2;
+}
+
+//region anisotropy specular
+float AnisotropicSpecular(float3 T, float3 H)
+{
+    float dotTH = dot(T, H);
+    float sinTH = sqrt(1.0f - dotTH * dotTH);
+    return max(sinTH, 9.9999997473787516355514526367188e-05f);;
+}
 
 //region fog feature
 static const float K_LOG2E = 1.44269502162933349609375f; // 1/ln(2)
@@ -1004,7 +1350,7 @@ float ComputeHeightFogIntegral(float vectorY, float camHeight, float baseHeight,
     // exponent = (CamY - Base) * Falloff
     float camExponent = (camHeight - baseHeight) * falloff;
     camExponent = max(camExponent, -127.0f); // 保护 exp2
-
+    
     // camTerm = Density * 2^(-exponent)
     float camTerm = density * exp2(-camExponent);
 
@@ -1012,12 +1358,12 @@ float ComputeHeightFogIntegral(float vectorY, float camHeight, float baseHeight,
     // Text 2: Line 201
     // x = VectorY * Falloff
     float x = vectorY * falloff;
-
+    
     // --- 3. 计算准确解 (Exact Solution) ---
     // Text 2: Line 202-205
     // result = (1 - 2^(-x)) / x
     // 这里 text 2 也对 x 做了 max(-127) 保护，虽然主要影响 pow 的结果
-    float x_safe = max(x, -127.0f);
+    float x_safe = max(x, -127.0f); 
     float expVal = exp2(-x_safe);
     float resExact = (1.0f - expVal) / x_safe; // 如果 x=0 这里会 NaN，但后面会处理
 

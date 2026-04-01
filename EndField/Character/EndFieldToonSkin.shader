@@ -1,4 +1,4 @@
-Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
+Shader "DanbaidongRP/EndFieldToon/CBT-2/Skin"
 {
     Properties
     {
@@ -7,13 +7,13 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             [Toggle]
             _ShowAlbedo                              ("ShowAlbedo", Float)                   = 0
         [FoldoutEnd]_FoldoutDebug_End("_FoldoutDebug_End", Float) = 0
-
+        
         // GPU Animation
         [FoldoutBegin(_FoldoutGpuAnimationEnd, _USE_GPU_ANIMATION)]_FoldoutGpuAnimation("GPU Animation", Float) = 0
         [HideInInspector]_USE_GPU_ANIMATION("_USE_GPU_ANIMATION", Float) = 0
             _GPU_Animation_Tint                      ("GPU动画融合度", Range(0, 1))            = 1
         [FoldoutEnd]_FoldoutGpuAnimationEnd("_FoldoutGpuAnimationEnd", Float) = 0
-
+        
         // GPU Animation Structured
         [FoldoutBegin(_FoldoutGpuAnimation_Structured_End, _USE_GPU_ANIMATION_STRUCTURED)]_FoldoutGpuAnimation_Structured("GPU Animation Structured", Float) = 0
         [HideInInspector]_USE_GPU_ANIMATION_STRUCTURED("_USE_GPU_ANIMATION_STRUCTURED", Float) = 0
@@ -22,26 +22,47 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             _BoneIndexOffset                         ("BoneIndexOffset", Vector)              = (184905, 183633, 514, 1)
             _BoneMaxCount                            ("BoneMaxCount", Range(0, 4))            = 4
         [FoldoutEnd]_FoldoutGpuAnimation_Structured_End("_FoldoutGpuAnimation_Structured_End", Float) = 0
-
+        
         // frag data
         [FoldoutBegin(_FoldoutFragData_End)]_FoldoutFragData("Frag Data", Float) = 0
             _FragDataCount                           ("FragDatabuffer数量", Float)           = 0
         [FoldoutEnd]_FoldoutFragData_End("_FoldoutFragData_End", Float) = 0
-
+        
         [FoldoutBegin(_FoldoutTexEnd)]_FoldoutTex("Textures", Float) = 0
             _BaseColor                              ("BaseColor", Color)                    = (1,1,1,1)
             _BaseMap                                ("BaseMap(diff alpha)", 2D)             = "white" {}
-            [NoScaleOffset]_PBRMask                 ("PBRMask(使用程序化切线mask 高光强度 ao range2mask)", 2D)  = "white" {}
+            [Toggle(_SHADOW_LUT_TEX)] 
+            _UseShadowLutTex                        ("'Use Shadow Color LUT Tex' {Toggle:{On:{_ShadowLutTex}, Off:{_ShadowColorBrightness, _ShadowColorSaturation}}}", Float) = 0
+            _ShadowLutTex                           ("Shadow Color Lut", 2D)                 = "white" {}
+            [Toggle(_METALLICSPECGLOSSMAP)] 
+            _UseMetallicGlossMap                    ("'Use MetallicGlossMap' {Toggle:{On:{_Metallic, _Specular, _Smoothness}, Off:{_MetallicGlossMap}}}", Float) = 0
 
+            [NoScaleOffset]_PBRMask                 ("PBRMask(metal metallicRatio ao smooth)", 2D)  = "white" {}
+            
+            [Space(10)]
+            [Toggle(_NORMALMAP)] 
+            _UseBumpMap                             ("'Use NormalMap' {Toggle:{On:{}, Off:{_BumpScale, _BumpMap}}}", Float) = 0
             [NoScaleOffset]_NormalMap               ("NormalMap", 2D)                       = "bump" {}
             _NormalScale                            ("NormalScale", Range(0, 2))            = 1
-
-            [NoScaleOffset]_SplitNormalMap          ("'Hair Normal Map' {}", 2D)            = "gray" {}
-            _SpecBumpScale                          ("'Spec Scale' {}", Range(0, 2))        = 1
-
-
+            
+            [Toggle(_SDFLIGHTMAP)] 
+            _UseSDFLightmap                         ("'Use SDF Lightmap' {Feature:{Color:5}}", Float) = 0
+            [NoScaleOffset]
+            _SDFLightmap                            ("SDF Lightmap", 2D)                    = "black" {}
+            [NoScaleOffset]
+            _SDFMask                                ("RimMask_XChannel/SDFMask_YChannel/FlatSHMask_ZChannel", 2D) = "black" {}
+            [Gamma][NoScaleOffset] 
+            _HighlightMap                           ("'HighlightMap' {}", 2D)               = "black" {}
+            
+            [Space(10)]
+            [Toggle(_DIFF_RAMP_ON)] 
+            _UseDiffRampMap                         ("'Diffuse Ramp' {Feature:{Color:4}}", Float) = 0
+            [Ramp]_ShadowRampTex                    ("ShadowRampTex", 2D)                   = "white" { }
+            [Toggle(_SPEC_RAMP_ON)] 
+            _UseSpecRampMap                         ("'Specular Ramp' {Feature:{Color:4}}", Float) = 0
+            _SpecRampMap                            ("VerticalRampTex", 2D)                 = "white" { }
         [FoldoutEnd]_FoldoutTexEnd("_FoldoutEnd", Float) = 0
-
+        
         [FoldoutBegin(_DecodeEnd)]_Decode("_Decode", Float) = 0
             [Enum(Opaque, 0, Transparent, 1)]
             _SurfaceType                            ("'Surface Type' {Dropdown:{Opaque:{_BlendMode, _OutlineTransparent, _TransparentDepthWrite}, Transparent:{}}}", Float) = 0
@@ -51,7 +72,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             _ShadowColorSaturation                  ("'Shadow Color Saturation' {}", Range(0, 2))       = 1
             [Space(10)]
             [ToggleUI] _SpecRampIridescentMode      ("'彩虹色模式(镭射塑料请勾选)' {}", Float)              = 0
-
+        
             [Space(10)]
             [HideInInspector] _ExposureParams                         ("ExposureParams.x", Vector)                          = (1.0, 0.0, 0.0, 0.0)
             [HideInInspector] _CharacterParams0                       ("CharacterParams0 z: shadow draken", Vector)         = (1.0, 1.05, 0.55, 0.8)
@@ -70,54 +91,41 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             /*[HideInInspector]*/ _IVDefaultSHAr                          ("_IVDefaultSHAr", Vector)                            = (0.0, 0.0, 0.0, 0.0)
             /*[HideInInspector]*/ _IVDefaultSHAg                          ("_IVDefaultSHAg", Vector)                            = (0.0, 0.0, 0.0, 0.0)
             /*[HideInInspector]*/ _IVDefaultSHAb                          ("_IVDefaultSHAb", Vector)                            = (0.0, 0.0, 0.0, 0.0)
-
+        
         [FoldoutEnd]_DecodeEnd("_DecodeEnd", Float) = 0
-
+        
         [FoldoutBegin(_RimEnd)]_Rim("Rim", Float) = 0
             _RimLightPosWS                          ("cb1_3 xyz: Rim lightPos", Vector)                                    = (0.0, 0.0, 0.0, 1.0)
             _CharacterParams8                       ("CharacterParams8 xyz: rimFinalColor w: RimIntensity", Vector)        = (0.0, 0.0, 0.0, 1.0)
             _CharacterParams9                       ("CharacterParams9 xyz: Rim dir", Vector)                              = (0.0, -1.0, 0.0, 1.0)
         [FoldoutEnd]_RimEnd("_RimEnd", Float) = 0
-
+        
         [FoldoutBegin(_RainingEnd)]_Raining("Raining", Float) = 0
-            _CharacterRainEffectTex                 ("PointRainMap(rg:rain normal, b:mask, a:flow dir)", 2D)             = "gray" {}
-            _CharacterRainStreakTex                 ("Vertical RainMap(rg:rain normal, b:mask, a:flow dir)", 2D)         = "gray" {}
+            _CharacterRainFaceDripTex                 ("PointRainMap(rg:rain normal, b:mask, a:flow dir)", 2D)             = "gray" {}
+            _CharacterRainFaceDropletTex              ("Vertical RainMap(rg:rain normal, b:mask, a:flow dir)", 2D)         = "gray" {}
             /*[HideInInspector]*/ [Toggle]_RainFilpObjectDir              ("切换方向", Float)                              = 0
             /*[HideInInspector]*/ _CharacterParams10                      ("CharacterParams10 x: use rain custom ppt, y: up rain intensity, z: pos scale, w: wet height", Vector)                = (1.0, 1.0, 2.0, 0.0)
             [HideInInspector] _RainEffectIntensity                    ("Rain Effect Intensity", Range(0, 1))          = 0
             [HideInInspector] _WetEffectWorldSpaceHeight              ("Wet Effect World Space Height", Float)        = -1000
             [HideInInspector] _WetEffectIntensity                     ("Wet Effect Intensity", Range(0, 1))           = 0
         [FoldoutEnd]_RainingEnd("_RainingEnd", Float) = 0
-
+        
         [FoldoutBegin(_FoldoutPBRPropEnd)]_FoldoutPBRProp("PBR Properties", Float) = 0
-            _Metallic                               ("Metallic", Range(0, 1))               = 0.0
+            _Metallic                               ("Metallic", Range(0, 1))               = 0.5
+            _Specular                               ("'Specular Scale' {}", Range(0, 1))    = 1
             _Roughness                              ("Roughness", Range(0, 1))              = 0.5
             _Occlusion                              ("Occlusion", Range(0, 1))              = 1
         [FoldoutEnd]_FoldoutPBRPropEnd("_FoldoutPBRPropEnd", Float) = 0
-
-        //Anisotropy
-        [FoldoutBegin(_FoldoutAnisotropyEnd)]_FoldoutAnisotropy("Anisotropy Properties", Float) = 0
-            _AnisotropyValue                        ("'Anisotropy Offset1' {}", Range(0, 1))          = 0.35
-            _AnisotropyDirX                         ("'Anisotropy Direction X' {}", Range(-1, 1))   = 0
-            _AnisotropyIntensity                    ("'Anisotropy Intensity' {}", Range(0, 3))      = 1
-            _AnisotropyEdgeFade                     ("'Anisotropy Edge Fade' {}", Range(0.01, 10))  = 1
-            _AnisotropyValue2                       ("'Anisotropy Offset2' {}", Range(0, 1))         = 0.4
-            _AnisotropyRange2                       ("'Anisotropy Range2' {}", Range(-1, 1))        = 0
-            _AnisotropyColor2                       ("'Anisotropy Color2' {}", Color)               = (0, 0, 0, 1)
-        [FoldoutEnd]_FoldoutAnisotropyEnd("_FoldoutAnisotropyEnd", Float) = 0
-
-        // SpecularLine
-        [FoldoutBegin(_FoldoutSpecularLineEnd, _SPECULAR_LINE)]_FoldoutSpecularLine("SpecularLine Properties", Float) = 0
-        [HideInInspector]_SPECULAR_LINE("_SPECULAR_LINE", Float) = 0
-            [Toggle]_UseLineMap                     ("'Use Line Map' {Toggle:{On:{_LineAmount}, Off:{_LineMap}}}", Float) = 0
-            _LineMap                                ("'Line Map' {}", 2D)                           = "black" {}
-            _LineAmount                             ("'Line Amount' {}", Float)                     = 300
-            _LineValue                              ("'Line Value' {}", Range(0, 1))                = 0
-            _LineRange                              ("'Line Range' {}", Range(-1, 1))               = 0
-            _LineIntensity                          ("'Line Intensity' {}", Range(0, 1))            = 0
-            _LineSaturation                         ("'Line Saturation' {}", Range(0, 10))          = 1
-        [FoldoutEnd]_FoldoutSpecularLineEnd("_FoldoutSpecularLineEnd", Float) = 0
-
+        
+        // Stocking
+        [FoldoutBegin(_FoldoutStockingsEnd, _ANISO_STOCKING)]_FoldoutStockings("Stockings Properties", Float) = 0
+        [HideInInspector]_ANISO_STOCKING("_ANISO_STOCKING", Float) = 0
+            _AnisoOffset                             ("AnisoOffset", Range(-1, 1))           = 0
+            _StockingsPow                            ("StockingsPow", Range(1, 5))           = 1.5
+            [HDR]_StockingsColorInside               ("ColorInside", Color)                  = (1,1,1,1)
+            [HDR]_StockingsColorOutside              ("ColorOutside", Color)                 = (0.5,0.5,0.5,1)
+        [FoldoutEnd]_FoldoutStockingsEnd("_FoldoutStockingsEnd", Float) = 0
+        
         // Shining Decal
         [FoldoutBegin(_FoldoutShining_DecalEnd, _DECAL_UV)]_FoldoutShining_Decal("Shining Decal Properties", Float) = 0
         [HideInInspector]_DECAL_UV("_DECAL_UV", Float) = 0
@@ -127,21 +135,31 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             _DecalMaskPower                         ("DecalMaskPower", Range(0.01, 30))      = 1
             _DecalMaskMin                           ("DecalMaskMin", Range(0, 2))            = 0
             _DecalMaskMax                           ("DecalMaskMax", Range(0, 2))            = 1
-
+        
             [Title(Fwidth)]
             _FwidthRange                            ("FwidthRange", Range(0, 1))             = 1
-
+        
             [Title(CombineDecalColor)]
             _DecalUVOffset                          ("DecalUVOffset", Range(0, 2))           = 1
             _DecalUVScale                           ("DecalUVScale", Range(0, 50))           = 20
             [Title(Decal Rough Metal)]
             _DecalRoughnessScale                    ("DecalRoughnessScale", Range(0, 2))     = 1
             _DecalMetallicScale                     ("DecalMetallicScale", Range(0, 2))      = 1
-
+        
             [Title(CombineDecalColor)]
             _DecalCenterIntensity                   ("DecalCenterIntensity", Range(0, 50))   = 1
             _DecalRimIntensity                      ("DecalRimIntensity", Range(0, 50))      = 1
         [FoldoutEnd]_FoldoutShining_DecalEnd("_FoldoutShining_DecalEnd", Float) = 0
+
+        [FoldoutBegin(_FoldoutSDFPropEnd)]_FoldoutSDFProp("SDF Properties", Float) = 0
+            [ToggleUI] 
+            _SkinRimOff                             ("'Skin Rim Falloff' {Section:{Color:6}}", Float) = 1
+            _SDFRimColor                            (" 'Skin Rim Color' {}", Color)          = (1, 1, 1, 1)
+            _SkinRimOffScale                        (" 'Skin Rim Scale' {}", Range(0, 1.5))  = 1
+            [Space(10)]
+            _HighlightMapVector                     ("'HighlightMap Vector' {Vector:2}", Vector) = (0.04, -0.01, 0, 0)
+        [FoldoutEnd]_FoldoutSDFPropEnd("_FoldoutSDFPropEnd", Float) = 0
+        
 
         // Direct Light
         [FoldoutBegin(_FoldoutDirectLightEnd)]_FoldoutDirectLight("Direct Light", Float) = 0
@@ -150,10 +168,11 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             [HDR]_SelfAddLightColor                 ("SelfAddLightColor", Color)             = (1,1,1,1)
             _AddLightColorLerp                      ("Unity AddLight or SelfAddLight", Range(0, 1))= 0.5
             _DirectOcclusion                        ("DirectOcclusion", Range(0, 1))         = 0.1
-
+             
             [Title(Shadow)]
             [HideInInspector] _DirectionalShadowParams                ("DirectionalShadowParams x: ", Vector)     = (1.0, 2.00, 0.000434, 6400.00)
             [HideInInspector] _DirectionalShadowParams2               ("DirectionalShadowParams2 x: z: ", Vector) = (0.0, 0.00, 1.00, 0.00)
+
             _ShadowColor                            ("ShadowColor", Color)                   = (0,0,0,1)
             _ShadowOffset                           ("ShadowOffset", Range(-1, 1))           = 0.5
             _ShadowSmoothNdotL                      ("ShadowSmoothNdotL", Range(0, 1))       = 0.25
@@ -161,12 +180,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             _ShadowStrength                         ("ShadowStrength", Range(0, 1))          = 1.0
         [FoldoutEnd]_FoldoutDirectLightEnd("_FoldoutEnd", Float) = 0
 
-        // Ramp
-        [FoldoutBegin(_FoldoutShadowRampEnd, _SHADOW_RAMP)]_FoldoutShadowRamp("ShadowRamp", Float) = 0
-        [HideInInspector]_SHADOW_RAMP("_SHADOW_RAMP", Float) = 0
-            [Ramp]_ShadowRampTex                    ("ShadowRampTex", 2D)                   = "white" { }
-            _SpecRampMap                        ("VerticalRampTex", 2D)                 = "white" { }
-        [FoldoutEnd]_FoldoutShadowRampEnd("_FoldoutEnd", Float) = 0
+
 
         // Indirect Light
         [FoldoutBegin(_FoldoutIndirectLightEnd)]_FoldoutIndirectLight("Indirect Light", Float) = 0
@@ -197,6 +211,8 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
         // Emission, Rim, etc.
         [FoldoutBegin(_FoldoutEmissRimEnd)]_FoldoutEmissRim("Emission, Rim, etc.", float) = 0
             [Title(Emission)]
+            [Toggle(_EMISSION)] 
+            _UseEmission                            ("'Use Emission' {Toggle:{On:{_EmissionColor, _EmissionMap, _EmissionBrightness}, Off:{}}}", Float) = 0
             _EmissionMap                            ("EmissionMap(diff alpha)", 2D)         = "black" {}
             [HDR]_EmissionCol                       ("EmissionCol", Color)                  = (0,0,0,1)
             _EmissionIntensity                      ("_EmissionIntensity", Range(0, 10))    = 1
@@ -207,7 +223,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             _DirectRimWidth                         ("DirectRimWidth", Range(0, 10))        = 2.5
             _PunctualRimWidth                       ("PunctualRimWidth", Range(0, 10))      = 2.75
         [FoldoutEnd]_FoldoutEmissRimEnd("_FoldoutEnd", float) = 0
-
+        
         //VFX Special
         [FoldoutBegin(_FoldoutVFXSpecialEnd, _CHARACTER_VFX_SPECIAL)]_FoldoutVFXSpecial("VFX Special", float) = 0
         [HideInInspector] _EnableCharacterVFX       ("'Character VFX' {Feature:{Color:7}}", Float)    = 0
@@ -228,7 +244,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             [ToggleUI] _VFXFresnelFlip              ("'Fresnel Flip' {}", Float)            = 0.0
             _SpecialDissolveScheduleOffset          ("'Dissolve Schedule Offset' {}", Range(0, 2)) = 0
         [FoldoutEnd]_FoldoutVFXSpecialEnd("_FoldoutVFXSpecialEnd", float) = 0
-
+        
 
         // Outline
         [FoldoutBegin(_FoldoutOutlineEnd, PassSwitch, CharacterOutline)]_FoldoutOutline("Outline", float) = 0
@@ -237,26 +253,26 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             _OutlineColor                           ("Outline Color", Color)                = (0, 0, 0, 0.8)
             _OutlineWidth                           ("Width", Range(0, 10))                 = 1.0
             _OutlineZOffset                         ("描边深度偏移", Range(-1, 1))            = 0.0
-
+        
             [Header(Custom_Curve)]
             _Outline_Custom_CurveDistance           ("自定义曲线距离", float)                  = 539.99994
             _Outline_Custom_CurveDistance_Tint      ("自定义曲线距离_强度",  Range(0, 1))     = 0
-
+        
             [Header(DepthFade)]
             [Toggle]_Use_Outline_DepthFade          ("使用深度渐变", float)                    = 0.0
             _OutlineWidth_DepthFade                 ("深度渐变_描边宽度, ", Range(0, 5))        = 1.0
             _Outline_DepthFade_Offset               ("深度渐变_偏移", float)                   = 0.0
             _Outline_DepthFade_Scale                ("深度渐变_缩放范围", float)                = 1.0
-
+        
             [Title(Lighting)]
             [HDR]_OutlineDirectLightingColor        ("DirectColor", Color)                  = (1,1,1,0.5)
             _OutlineDirectLightingOffset            ("DirectOffset", Range(-1, 1))          = -1
             [HDR]_OutlinePunctualLightingColor      ("PunctualColor", Color)                = (1,1,1,0.5)
             _OutlinePunctualLightingOffset          ("PunctualOffset", Range(-1, 1))        = -1
         [FoldoutEnd]_FoldoutOutlineEnd("_FoldoutEnd", float) = 0
-
+        
         [FoldoutBegin(_FogEnd)]_Fog("Fog", Float) = 0
-
+            
             _IntegratedLightScattering              ("IntegratedLightScattering", 3D)                    = "black" {}
             // ====================================== 角色控制参数 ======================================
             [HideInInspector] _CharacterParams11 ("Character Control Param 11 (w:分支阈值<0.5启用雾)", Vector) = (0,0,0,1.0)
@@ -286,16 +302,16 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
         [Space(10)][Title(MaterialFlags)]
         [KeysEnum(FLAG_HAIRSHADOW, FLAG_EYELASH, FLAG_HAIRMASK)]
         _ToonFlagsKeywords                          ("ToonFlags", Float)                    = -1
-
+        
         // Other Settings
         [Title(OtherSettings)]
-        [Enum(UnityEngine.Rendering.CullMode)]
+        [Enum(UnityEngine.Rendering.CullMode)] 
         _Cull                                       ("Cull Mode", Float)                    = 2
         [Toggle(_ALPHATEST_ON)]_AlphaClip           ("Alpha Clip", Float)                   = 0
         _Cutoff                                     ("Cutoff", Range(0, 1))                 = 1
         [HideInInspector] _AlphaPremultiply         ("Alpha Premultiply", Float)            = 0
     }
-
+    
     SubShader
     {
         Tags
@@ -379,7 +395,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             #include "Packages/com.unity.render-pipelines.danbaidong/ShaderLibrary/DeclareDepthTexture.hlsl"
 
             #include "Packages/com.unity.render-pipelines.danbaidong/Shaders/Material/PBRToon/PBRToon.hlsl"
-
+            
 
             #if defined(_USE_GPU_ANIMATION_STRUCTURED)
             StructuredBuffer<float4> _BoneMatrices;
@@ -390,12 +406,12 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
 
             float _GPU_Animation_Tint;
             float _GPU_Animation_Structured_Tint;
-
+            
             #if defined(_USE_GPU_ANIMATION)
             #define MAX_BONE_MATRIX_COUNT 768
             float4 _BoneMatrices[MAX_BONE_MATRIX_COUNT];
             #endif
-
+            
             #if defined(_ALPHATEST_ON)
             float4  _BaseMap_ST;
             float   _Cutoff;
@@ -423,10 +439,10 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
                 float z = condition.z ? 1.0f : 0.0f;
                 return float3(x,y,z);
             }
-
+            
             #include "Packages/com.unity.render-pipelines.danbaidong/Shaders/Material/UmiToon/EndField/Helper/GPU_Animation_Function.hlsl"
 
-            struct Attributes
+            struct Attributes 
             {
                 float4 vertex       :POSITION;
                 float3 normal       :NORMAL;
@@ -439,7 +455,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
                 float2 uv7          :TEXCOORD5;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
-            struct Varyings
+            struct Varyings 
             {
                 float4 positionHCS      :SV_POSITION;
                 float3 positionWS       :TEXCOORD0;
@@ -458,9 +474,9 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_TRANSFER_INSTANCE_ID(v, o);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-
+                
                 ApplyToGpuAnimation(v);
-
+                
                 o.positionHCS = TransformObjectToHClip(v.vertex.xyz);
                 // o.positionHCS = TransformWorldToHClip(v.vertex.xyz);
                 o.positionWS = TransformObjectToWorld(v.vertex.xyz);
@@ -548,9 +564,16 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
 
             // -------------------------------------
             // Material Keywords
+            #pragma shader_feature _DIFF_RAMP_ON
+            #pragma shader_feature _NORMALMAP
+            #pragma shader_feature _EMISSION
+            #pragma shader_feature _METALLICSPECGLOSSMAP
+            #pragma shader_feature _SDFLIGHTMAP
+            #pragma shader_feature _SHADOW_LUT_TEX
+            
             #pragma shader_feature _ _USE_GPU_ANIMATION _USE_GPU_ANIMATION_STRUCTURED
             #pragma shader_feature_local _DECAL_UV
-            #pragma shader_feature_local _SPECULAR_LINE
+            #pragma shader_feature_local _ANISO_STOCKING
             #pragma shader_feature_local _SHADOW_RAMP
             #pragma shader_feature_local _INDIR_CUBEMAP
             #pragma shader_feature_local _CHARACTER_VFX_SPECIAL
@@ -602,18 +625,18 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             #include "Packages/com.unity.render-pipelines.danbaidong/ShaderLibrary/PreIntegratedFGD.hlsl"
             #include "Packages/com.unity.render-pipelines.danbaidong/ShaderLibrary/PerObjectShadows.hlsl"
 
-
+            
 
             #if defined(_USE_GPU_ANIMATION_STRUCTURED)
             StructuredBuffer<float4> _BoneMatrices;
             #endif
 
             StructuredBuffer<float4> _FragData;
-
+            
             CBUFFER_START(UnityPerMaterial)
             //Debug
             float   _ShowAlbedo;
-
+            
             //GPU Skinning
             #if defined(_USE_GPU_ANIMATION)
                 #define MAX_BONE_MATRIX_COUNT 768
@@ -653,9 +676,9 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             float4  _IVParam0;
             float4  _IVParam1;
 
-            float4  _IVDefaultSHAr;
-            float4  _IVDefaultSHAg;
-            float4  _IVDefaultSHAb;
+            float4  _IVDefaultSHAr;           
+            float4  _IVDefaultSHAg;           
+            float4  _IVDefaultSHAb;           
 
             //Frag Params
             float4  _CharacterParams8;
@@ -664,9 +687,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             //Base Properties
             float4  _BaseColor;
             float4  _BaseMap_ST;
-            float4  _LineMap_ST;
             float   _NormalScale;
-            float   _SpecBumpScale;
             float4  _VFXSpecialMainTex_ST;
             float4  _VFXSpecialBlendTex_ST;
 
@@ -676,31 +697,15 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             float  _RainEffectIntensity;
             float  _WetEffectWorldSpaceHeight;
             float  _WetEffectIntensity;
-
+            
             //顶点着色器
             float   _SinEnable;
 
             // PBR Properties
             float   _Metallic;
+            float   _Specular;
             float   _Roughness;
             float   _Occlusion;
-
-            //Anisotropy
-            float   _AnisotropyValue;
-            float   _AnisotropyDirX;
-            float   _AnisotropyIntensity;
-            float   _AnisotropyEdgeFade;
-            float   _AnisotropyValue2;
-            float   _AnisotropyRange2;
-            float4  _AnisotropyColor2;
-
-            //Specular Line
-            float   _UseLineMap;
-            float   _LineAmount;
-            float   _LineValue;
-            float   _LineRange;
-            float   _LineIntensity;
-            float   _LineSaturation;
 
             // Stockings
             float   _AnisoOffset;
@@ -721,16 +726,22 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
 
             float   _DecalRoughnessScale;
             float   _DecalMetallicScale;
-
+            
             float   _DecalCenterIntensity;
             float   _DecalRimIntensity;
 
+            // SDF Params
+            float   _SkinRimOff;
+            float4  _SDFRimColor;
+            float   _SkinRimOffScale;
+
+            float4  _HighlightMapVector;
+            
             // Direct Light
             float4  _SelfLight;
             float   _MainLightColorLerp;
             float4  _SelfAddLightColor;
             float   _AddLightColorLerp;
-            float   _DirectOcclusion;
 
             // Shadow
             float4  _DirectionalShadowParams;
@@ -759,19 +770,19 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
 
             //VFX Special
             float   _VFXMainUVSet;
-
+            
             float   _VFXFresnelBias;
             float   _VFXFresnelAffectOpacity;
             float   _VFXFresnelPower;
             float   _VFXFresnelFlip;
-
+            
             float   _UseVFXMainTexAsAlpha;
             float   _SpecialDissolveScheduleOffset;
             float   _VFXColorIntensity;
             float   _VFXColorAlpha;
-
+            
             float4  _VFXSpecialParam;
-            float4  _VFXBlendTint;
+            float4  _VFXBlendTint;          
             float4  _VFXFresnelColor;
             float4  _VFXColor;
 
@@ -783,36 +794,36 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             float   _PunctualRimWidth;
 
             //FOG
-            float4  _FogColor_Height;
-            float4  _FogColor_Directional;
-            float4  _FogColor_Transition;
-
-            float4  _FogColor_MixE;
-            float4  _FogColor_MixF;
-
-            float   _FogBaseDensity;
-            float   _FogMieK;
-            float   _FogHeightBias;
-            float   _FogDistanceOffset;
-            float   _FogHeightRange;
-            float4  _cb0_136;
-
+            float4  _FogColor_Height;        
+            float4  _FogColor_Directional;   
+            float4  _FogColor_Transition;    
+            
+            float4  _FogColor_MixE;          
+            float4  _FogColor_MixF;          
+            
+            float   _FogBaseDensity;              
+            float   _FogMieK;                     
+            float   _FogHeightBias;               
+            float   _FogDistanceOffset;           
+            float   _FogHeightRange;              
+            float4  _cb0_136;                     
+            
             //extra fog
             float4  _CharacterParams11;
 
-            float4  _AtmosphereFogParams0;
-            float4  _AtmosphereFogParams1;
-            float4  _AtmosphereFogParams2;
-            float4  _AtmosphereFogParams3;
-            float4  _AtmosphereFogParams4;
-            float4  _AtmosphereFogParams5;
+            float4  _AtmosphereFogParams0; 
+            float4  _AtmosphereFogParams1; 
+            float4  _AtmosphereFogParams2; 
+            float4  _AtmosphereFogParams3; 
+            float4  _AtmosphereFogParams4; 
+            float4  _AtmosphereFogParams5; 
 
-            float4  _VolumetricFogParams0;
-            float4  _VolumetricFogParams1;
-            float4  _VolumetricFogParams2;
-            float4  _VolumetricFogParams3;
-            float4  _VolumetricFogParams4;
-
+            float4  _VolumetricFogParams0; 
+            float4  _VolumetricFogParams1; 
+            float4  _VolumetricFogParams2; 
+            float4  _VolumetricFogParams3; 
+            float4  _VolumetricFogParams4; 
+       
             float4  _ExponentialFogParams0;
             float4  _ExponentialFogParams1;
             float4  _ExponentialFogParams2;
@@ -826,32 +837,35 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             TEXTURE2D(_BaseMap);
             SAMPLER(sampler_BaseMap);
 
+            TEXTURE2D(_ShadowLutTex);
+            SAMPLER(sampler_ShadowLutTex);
+
             TEXTURE2D(_PBRMask);
             SAMPLER(sampler_PBRMask);
-
-            TEXTURE2D(_LineMap);
-            SAMPLER(sampler_LineMap);
-
             TEXTURE2D(_NormalMap);
             SAMPLER(sampler_NormalMap);
 
-            TEXTURE2D(_SplitNormalMap);
-            SAMPLER(sampler_SplitNormalMap);
+            TEXTURE2D(_SDFLightmap);
+            SAMPLER(sampler_SDFLightmap);
+            TEXTURE2D(_SDFMask);
+            SAMPLER(sampler_SDFMask);
+            TEXTURE2D(_HighlightMap);
+            SAMPLER(sampler_HighlightMap);
+            
 
-            // TEXTURE2D(_DecalMap);
-            // SAMPLER(sampler_DecalMap);
+            TEXTURE2D(_DecalMap);
+            SAMPLER(sampler_DecalMap);
 
             TEXTURE2D(_EmissionMap);
             SAMPLER(sampler_EmissionMap);
 
-            TEXTURE2D(_CharacterRainEffectTex);
-            SAMPLER(sampler_CharacterRainEffectTex);
-            TEXTURE2D(_CharacterRainStreakTex);
-            SAMPLER(sampler_CharacterRainStreakTex);
+            TEXTURE2D(_CharacterRainFaceDripTex);
+            SAMPLER(sampler_CharacterRainFaceDripTex);
+            TEXTURE2D(_CharacterRainFaceDropletTex);
+            SAMPLER(sampler_CharacterRainFaceDropletTex);
 
             TEXTURE2D(_VFXSpecialMainTex);
             SAMPLER(sampler_VFXSpecialMainTex);
-
             TEXTURE2D(_VFXSpecialBlendTex);
             SAMPLER(sampler_VFXSpecialBlendTex);
 
@@ -863,30 +877,34 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             TEXTURE3D(_T5);
             // SAMPLER(sampler_T3);
 
+            
+
             TEXTURE2D(_ShadowRampTex);
             SAMPLER(sampler_ShadowRampTex);
 
             TEXTURE2D(_SpecRampMap);
             SAMPLER(sampler_SpecRampMap);
+            
 
             TEXTURECUBE(_IndirSpecCubemap);
 
             TEXTURE3D(_IntegratedLightScattering);
 
-            #include "Packages/com.unity.render-pipelines.danbaidong/Shaders/Material/UmiToon/EndField/EndFieldToonFunc/EndFieldToonHairFunc.hlsl"
+            #include "Packages/com.unity.render-pipelines.danbaidong/Shaders/Material/UmiToon/EndField/EndFieldToonFunc/EndFieldToonSkinFunc.hlsl"
+            #include "Packages/com.unity.render-pipelines.danbaidong/Shaders/Material/UmiToon/EndField/EndFieldToon.hlsl"
             #include "Packages/com.unity.render-pipelines.danbaidong/Shaders/Material/UmiToon/EndField/Helper/GPU_Animation_Function.hlsl"
 
             Varyings ForwardToonVert(Attributes v)
             {
                 Varyings o;
                 ZERO_INITIALIZE(Varyings, o);
-
-                UNITY_SETUP_INSTANCE_ID(v);
-                UNITY_TRANSFER_INSTANCE_ID(v,o);
+                
+                UNITY_SETUP_INSTANCE_ID(v); 
+                UNITY_TRANSFER_INSTANCE_ID(v,o); 
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
                 ApplyToGpuAnimation(v);
-
+                
                 real3 posWS = TransformObjectToWorld(v.vertex.xyz);
                 real3 posVS = TransformWorldToView(posWS);
                 real4x4 matrix_offset = {
@@ -905,7 +923,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
                 o.positionOS = v.vertex.xyz;
                 o.positionWS = TransformObjectToWorld(v.vertex.xyz);
                 o.positionHCS = TransformObjectToHClip(v.vertex.xyz);
-
+                
                 o.normalOS = v.normal;
                 o.normalWS.xyz = TransformObjectToWorldNormal(v.normal, true);
                 o.tangentWS.xyz = TransformObjectToWorldDir(v.tangent.xyz, true);
@@ -916,10 +934,10 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
                 // o.tangentWS.xyz = normalize(v.tangent.xyz);
 
                 o.bitangentWS.xyz = cross(o.normalWS.xyz, o.tangentWS.xyz) * v.tangent.w * GetOddNegativeScale();
-
+                
                 o.viewDirWS.xyz = /*lerp(*/GetWorldSpaceNormalizeViewDir(o.positionWS)/*, normalize(UNITY_MATRIX_V[2].xyz), _cb0_66.w)*/;
 
-
+                
                 o.color = v.color;
                 o.uv.xy = TRANSFORM_TEX(v.uv0.xy, _BaseMap);
                 o.uv.zw = v.uv1.xy;
@@ -937,9 +955,29 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
                 ZERO_INITIALIZE(EndFieldSurface, surface);
                 IntializeEndFieldSurface(i, facing, surface);
 
+                //region base params
+                // ===================== Tlie 1：base texture sample and base params =====================
+                // #ifdef _SDFLIGHTMAP
+                //     float4 sdfMaskMap = SAMPLE_TEXTURE2D(_SDFMask, sampler_SDFMask, surface.baseUV);
+                //     surface.RimMask_XChannel       = sdfMaskMap.x;
+                //     surface.SDFMask_YChannel       = sdfMaskMap.y;
+                //     surface.FlatSHMask_ZChannel    = sdfMaskMap.z;
+                //     surface.noseLightMask_WChannel = sdfMaskMap.w;
+                //     surface.specularLevel = surface.SDFMask_YChannel * _Specular;
+                // #else
+                //     float4 sdfMaskMap            = 0.0;
+                //     surface.SDFMask_YChannel       = 1.0;
+                //     surface.FlatSHMask_ZChannel    = 1.0;
+                //     surface.specularLevel = _Specular;
+                // #endif
+                // float4 pbrMask = SAMPLE_TEXTURE2D(_PBRMask, sampler_PBRMask, surface.baseUV);
+
+                // float3 albedo_shadow         = surface.basecolor * _ShadowColorBrightness;
+                // albedo_shadow                = lerp(Luminance(albedo_shadow), albedo_shadow, _ShadowColorSaturation);
+
                 //debug
                 if (_ShowAlbedo) return float4(surface.basecolor, 1);
-
+                
                 uint meshRenderingLayers = GetMeshRenderingLayer();
 
                 Lighting directLighting;
@@ -947,62 +985,92 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
                 ZERO_INITIALIZE(Lighting, directLighting);
                 ZERO_INITIALIZE(Lighting, indirectLighting);
 
+                //region normal calculate
+                // ===================== 分块2：反照率计算与法线空间转换 =====================
                 Light mainLight = GetMainLight();
                 EndFieldLightData lightData;
                 ZERO_INITIALIZE(EndFieldLightData, lightData);
                 InitializeEndFieldLightData(mainLight, lightData);
 
-                //region 环境diffuse SH Color
+                //region env diffuse SH Color
                 EndFieldEnvData envData;
                 ZERO_INITIALIZE(EndFieldEnvData, envData);
                 ApplyEnvFeature(surface, envData);
 
+                //===================== 提前的计算位置 shadow sample =====================
                 EndFieldShadowData shadowData;
                 ZERO_INITIALIZE(EndFieldShadowData, shadowData);
                 IntializeEndFieldShadow(surface, shadowData);
 
                 EndFieldVecData vecData;
                 ZERO_INITIALIZE(EndFieldVecData, vecData);
-                InitializeEndFieldVecData(i, lightData, shadowData, surface, vecData);
+                InitializeEndFieldVecData(i, lightData, shadowData, vecData);
 
-                CalculateSpecularBitangent(vecData, surface);
+                //region param
+                float3 normalWS = lerp(surface.rimDirWS_XZ, surface.normalWS_raw_XZ, surface.SDFMask_YChannel);
+                float3 indir_normalWS = SafeNormalize(normalWS);
+                float NdotUp_clamp = saturate(_CharacterParams7.x + dot(indir_normalWS, _CharacterParams6.xyz)) 
+                                    * _CharacterParams7.y + _CharacterParams7.z;
+                
+                ApplyFaceRimColorToSurfaceData(vecData, surface);
 
-                float NdotUp_clamp = saturate(_CharacterParams7.x + dot(surface.normalWS, _CharacterParams6.xyz))
-                                    * _CharacterParams7.y + _CharacterParams7.z;     //计算顶光吗
                 //region 湿身feature
+                // ===================== region 湿身feature =====================
                 ApplyRainFeature(surface);
 
+
+                //region bsdfData
                 EndFieldDotData dotData;
                 ZERO_INITIALIZE(EndFieldDotData, dotData);
                 InitializeEndFieldDotData(vecData, surface, dotData);
 
-                //region diffuse calculate
                 EndFieldBSDF bsdf;
                 ZERO_INITIALIZE(EndFieldBSDF, bsdf);
                 SurfaceConvertToBSDF(vecData, dotData, surface, bsdf);
+                // return float4(surface.noseLightMask_WChannel.xxx, 1);
+                
+
+                float3 worldAxisX = UNITY_MATRIX_M._m00_m10_m20;
+                float3 worldAxisY = UNITY_MATRIX_M._m01_m11_m21;
+                float3 worldAxisZ = UNITY_MATRIX_M._m02_m12_m22;
+                
+                //region SDFLightmap sample
+                // ==================== SDFLightmap sample ==================
+                ApplySDFFeatureToSurfaceData(vecData, surface);
 
                 float MaxRampSubMinRamp = Max3(bsdf.ramp_NdotL.x, bsdf.ramp_NdotL.y, bsdf.ramp_NdotL.z)
                                         - Min3(bsdf.ramp_NdotL.x, bsdf.ramp_NdotL.y, bsdf.ramp_NdotL.z);
+                float _1760 = smoothstep(0.0f, 1.0f, (vecData.cameraForwardOS_XZ.z - 0.75f) * (-2.0f));
+
+                float _1765 = max( surface.FlatSHMask_ZChannel * _1760,  surface.SDFMask_YChannel);
+                float rampAlpha_w = lerp(1.0f, shadowData.char, _1765);
+                float shadowMixFactor = saturate(surface.occlusion * lerp(1.0f, rampAlpha_w, surface.SDFMask_YChannel) + bsdf.ramp_NdotL.w);
 
                 //综合阴影项
-                float occlusionShadow = shadowData.char * surface.occlusion;  //只是阴影和环境光遮蔽
-                float ramp2ShadowAtten = bsdf.ramp_NdotV * occlusionShadow;   //补充NdotV的菲涅尔细节
-                float shadowMixFactor = saturate(ramp2ShadowAtten + bsdf.ramp_NdotL.a);   //补充NdotL的光照渐变细节
+                // float occlusionShadow = shadowData.char * occlusion;
+                // float ramp2ShadowAtten = rampAlpha * occlusionShadow;
+                // float shadowMixFactor = saturate(ramp2ShadowAtten + bsdf.ramp_NdotL.a);
 
                 // 混合基础 Diffuse (Shadow part)
                 float3 diffuseShadowColor = lerp(bsdf.diffuse_shadow2, bsdf.diffuse_shadow * _CharacterParams0.z, shadowMixFactor);       //r20.xyz
 
                 // 计算最暗阴影因子
-                float ramp1minShadowFactor = Min3(shadowData.char, surface.occlusion, bsdf.ramp_NdotL.a);
+                //#ifdef _FacePart
+                float ramp1minShadowFactor = Min3(rampAlpha_w, surface.occlusion, bsdf.ramp_NdotL.a);
+                float ramp2ShadowAtten = surface.occlusion * rampAlpha_w;
+                //#else
+                // float ramp1minShadowFactor = Min3(shadowData.char, occlusion, bsdf.ramp_NdotL.a);
+                //#endif
+
                 // 混合最终 Diffuse Base
                 float3 diffuseBase = lerp(diffuseShadowColor, bsdf.diffuse, ramp1minShadowFactor);
-                // 应用 Ramp 染色, 将染色ramp添加到明暗交界线部分
+                // 应用 Ramp 染色
                 float3 ramp_diffuseColor = lerp(1, bsdf.ramp_NdotL.xyz, MaxRampSubMinRamp) * diffuseBase;
-                // 将ramp后过重的颜色明暗系数清除，只保留颜色变化
+                // 计算 Ramp 亮度缩放系数
                 float rampGray = max(0.001, Luminance(ramp_diffuseColor));
                 float3 avgvalue_ramp_diffuseColor = ramp_diffuseColor * clamp(Luminance(diffuseBase) * rcp(rampGray), 0, 1.5);
-
                 // 7. 间接光与高光计算 (Indirect & Specular)
+        
                 // 限制 Ramp Scale
                 float3 scaleClamped;
                 scaleClamped.x = clamp(envData.envIntensity,  0,    1.5);
@@ -1011,70 +1079,90 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
 
                 // 间接光基础
                 float indSpecMask = ramp1minShadowFactor * min(1, _CharacterParams1.y);
-                float3 indSpecBase = NdotUp_clamp * lerp(envData.envColor_fixed, 1, indSpecMask);
-
+                float3 indSpecBase = NdotUp_clamp * lerp(envData.envColor_fixed, 1, indSpecMask);   //envFinalColor镭射颜色
+                
                 // 混合直射光颜色，降低暗面区域饱和度
                 float3 saturatedDirectionalLightColor = lerp(Luminance(lightData.color), lightData.color, ramp1minShadowFactor);
 
-                float3 indSpecStep1 = scaleClamped.x * indSpecBase * lerp(1.0f, lightData.standardColor, lightData.useStandardColor);
+                float3 indSpecStep1 = scaleClamped.x * indSpecBase * lerp(1.0f, lightData.standardSkinColor, _CharacterParams5.w);
                 indSpecStep1 = indSpecStep1 + saturatedDirectionalLightColor;
 
                 // 混合最终间接高光
                 float scaleSmooth = min(envData.envIntensity * 0.35f + 0.65f, 1.5f);
-                float finalSpecScale = lerp(scaleSmooth, scaleClamped.y, _CharacterParams1.x);  //切换另一种钳制曲线
+                float finalSpecScale = lerp(scaleSmooth, scaleClamped.y, _CharacterParams1.x);
 
                 float3 indSpecStep2 = indSpecBase * finalSpecScale * _CharacterParams0.w;
-                float3 combineLightColor = lerp(indSpecStep2, indSpecStep1 * _CharacterParams0.y, shadowData.scene);
-
+                float3 finalIndirectSpec = lerp(indSpecStep2, indSpecStep1 * _CharacterParams0.y, shadowData.scene);
+                
                 // 8. 最终 Diffuse 输出 (Final Diffuse)
                 // 增加饱和度
-                float3 diffuseSat = lerp(Luminance(bsdf.diffuse), bsdf.diffuse, 1.2f);
+                float diffuse_gray = Luminance(bsdf.diffuse);
+                float3 diffuseSat = lerp(diffuse_gray, bsdf.diffuse, 1.2f);
 
                 // 混合最终 Diffuse
                 float3 diffuseFinalStep1 = lerp(bsdf.diffuse_shadow * _CharacterParams0.z, diffuseSat, ramp2ShadowAtten);
                 float3 sharpenDiffuse = lerp(diffuseFinalStep1, avgvalue_ramp_diffuseColor, shadowData.scene);  //提高对比度，减少暗面，增加投影与非投影区域的对比
-
-                float3 diffuseLighting = combineLightColor * sharpenDiffuse;
-
-                // region anisotropy specular calculate
-                // 阴影处spec的强度权重调整
+                
+                // 9. GGX 高光计算 (GGX Specular)
+                // 光照方向偏移 (Stylized Light Shift)
                 float shadowLerp = lerp(ramp2ShadowAtten, ramp1minShadowFactor, shadowData.scene);
-                float specShadowWeight = lerp(_CharacterParams0.z, 1, shadowLerp) * (shadowLerp * 0.5 + 0.5);
+                float shiftWeight = lerp(_CharacterParams0.z, 1, shadowLerp) * (shadowLerp * 0.5 + 0.5);
+                
+                // region ggx calculate
+                float D_term = D_EndField(dotData, bsdf);
 
-                //==================== 第一层高光 =======================
-                float3 specColor_small = Hair_D_EndField(vecData, surface);
-                float specMask_small = Max3(specColor_small.x, specColor_small.y, specColor_small.z);
+                // region highLightmap sample
+                float2 highlightMapVector = _HighlightMapVector.xy;
+                float2 highLightMapUV;
+                // float3 viewDirOS = mul(UNITY_MATRIX_M, vecData.viewDirWS);
+                highLightMapUV.x = mad( dot(vecData.viewDirWS, worldAxisX), highlightMapVector.x, surface.baseUV.x);
+                highLightMapUV.y = mad( dot(vecData.viewDirWS, worldAxisY), highlightMapVector.y, surface.baseUV.y);
+                float4 highLightMap = SAMPLE_TEXTURE2D(_HighlightMap, sampler_HighlightMap, highLightMapUV);
 
-                //================  第二层高光  ========================
-                float3 specColor_large = Hair_F_EndField(vecData, surface);
+                //==================== sample vertical map, combine mainLightingColor  ====================
+                // float2 specRampUV;
+                // specRampUV.x = lerp(ggx, rain_NdotV2, _SpecRampIridescentMode);
+                // specRampUV.y = surface.perceptualRoughness * (1.0f - metallic);         //r2.x: perceptualRoughness, r2.y: 
+                // float3 specRampColor = SAMPLE_TEXTURE2D(_HighlightMap, sampler_HighlightMap, specRampUV, 0).xyz;
 
-                //region line map
-                float lineAmount = ceil(max(frac(surface.baseUV.x * _LineAmount) - 0.5f, 0.0f));
+                // float3 ramp_directSpecularColor = bsdf.F0 * specRampColor;
+                // bsdf.F0 = lerp(bsdf.F0, ramp_directSpecularColor, _SpecRampIridescentMode);
+                
+                //region distance rim light calculate
+                float3 rimFinalColor = ApplyRimFeature(diffuseSat, vecData, shadowData, surface);
+                
+                //region env BRDF calculate
+            //==================== Env BRDF Calculate (Split-Sum Approximation) ====================
+                float3 indirectSpecular;
+                if (surface.rainMask > 0.001f)
+                {
+                    surface.perceptualRoughness = lerp(surface.perceptualRoughness, surface.perceptualRoughness_rain, surface.rainMask);
+                    float3 envBRDF = EnvBRDF(dotData, surface, bsdf);
+                    float3 envSpecular = EnvSpecular(vecData, surface);
 
-                float lineValue = _LineValue * 2.0f - 1.0f;
-                float3 anisoTangent_final = ShiftTangent(surface.specBitangent, surface.normalWS_smooth, lineValue);
-                float anisoSpec_final = AnisotropicSpecular(anisoTangent_final.xyz, vecData.halfDirWS);
-
-                float lineTemp = lerp(lineAmount, 1.0f - surface.hairLine, _UseLineMap);
-                float lineIntensity = lerp(1.0f - _LineIntensity, 1.0f, lineTemp);
-                float lineIntensity_mask = lerp(lineIntensity, 1.0f, specMask_small);
-                float power_anisoSpec_final = trunc(max(1.0f  - _LineRange, 0.0f) * 200.0f);
-                float _2018 = mad(surface.specularLevel, (1.0f - lineIntensity_mask) * pow(anisoSpec_final, power_anisoSpec_final), 1.0f);
-                float lineSaturation = lerp(_LineSaturation, 1.0f, _2018);
-
-                //combine Color
-                float3 someDiffuseColor = diffuseLighting * _2018;
+                    indirectSpecular = surface.rainMask * envSpecular * envBRDF * scaleClamped.z * _CharacterParams0.w;
+                }
+                else
+                {
+                    indirectSpecular = 0.0f;
+                }
+                //region combine lighting
+            //==================== combine lighting ====================
 
                 // 最终 Alpha
-                float alpha = lerp(1, surface.alpha, _AlphaPremultiply);
+                // float alpha = lerp(1, albedo.a, _AlphaPremultiply);
+                
+                float3 directDiffuse = sharpenDiffuse * finalIndirectSpec.xyz;
+                //#ifdef _FacePart
+                float3 directSpecular = finalIndirectSpec * shiftWeight;    //no specular
 
-                float3 sharpenDiffuse_final = lerp(Luminance(someDiffuseColor), someDiffuseColor, lineSaturation);
+                float3 directNoseSpecular = bsdf.F0 * D_term * directSpecular.xyz;
+                float3 directMouthSpecular = directSpecular.xyz * highLightMap.xyz;
+                //#else
+                // float3 directSpecular = ramp_directSpecularColor * shiftWeight * v_term;
+                //#endif
 
-                float3 spec_large = (1.0f - specMask_small) * specColor_large * surface.rainMask;
-                float3 spec_small = bsdf.specularLevel * specColor_small * _AnisotropyIntensity * 5.0f * surface.rainMask;
-
-                float3 directSpecular = combineLightColor * specShadowWeight * (spec_small.xyz + spec_large.xyz);
-                float3 lightingColor = sharpenDiffuse_final.xyz * alpha + directSpecular;
+                float3 lightingColor = directDiffuse + directNoseSpecular + directMouthSpecular + indirectSpecular;
 
                 float gray_lightingColor = Luminance(lightingColor);
                 float gray_lightingColor_clamp = clamp(gray_lightingColor - 0.5, 0, 0.5);
@@ -1082,34 +1170,33 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
 
                 float3 mainLightingColor = lerp(gray_lightingColor, lightingColor, gray_lightingColor_clamp);
 
-            //region distance rim light calculate
-                float3 rimColor = ApplyRimFeature(diffuseSat, vecData, shadowData, surface);
-            //region env rim light
-                float3 SHRimColor = ApplySHRimFeature(diffuseSat, saturatedDirectionalLightColor, vecData, shadowData, dotData,
-                    envData, surface, bsdf);
-
-
-            //region combine lighting
                 float3 finalColor = mainLightingColor;
                 // finalColor += indirectSpecular * envData.envColor_fixed;
-                finalColor += SHRimColor;
+                // finalColor += autoEnvRimColor;
                 // finalColor += effectColor * alpha;
-                finalColor += rimColor;
+                finalColor += rimFinalColor;
+            // return float4(rimFinalColor.xyz, 1);
 
-                float3 resultColor = finalColor / _ExposureParams.xxx;  //可能是反曝光
+            //============================= sample StructuredBuffer t0 =============================
+
+                float3 color_r13 = finalColor;
+
+            //============================= 多光源部分 =============================
+                    
+                float3 resultColor = color_r13 / _ExposureParams.xxx;     //r0.xyz
                 float4 outputColor;
-                outputColor.a = _SurfaceType == 1.0f ? surface.alpha : 1.0f;
+                outputColor.a = 1.0f;   //_SurfaceType == 1.0f ? albedo.a : 
                 //region fog
-                if (_CharacterParams11.w < 0.5)
+                if (_CharacterParams11.w < 0.5) 
                 {
                     // =========================================================
                     // Part A: 几何与大气散射准备 (Atmosphere Pre-calculation)
                     // =========================================================
                     // --- 计算视线向量 (处理正交/透视)
-                    float3 viewVec = GetWorldSpaceNormalizeViewDir(i.positionWS.xyz);
+                    float3 viewVec = GetWorldSpaceNormalizeViewDir(surface.positionWS);
                     float distSq = dot(viewVec, viewVec);
                     // 防止距离为0导致的NaN
-                    float invDist = rsqrt(max(distSq, 1e-8));
+                    float invDist = rsqrt(max(distSq, 1e-8)); 
                     float dist = distSq * invDist;
                     float3 viewDir = viewVec * invDist; // Normalized
                     // 归一化视线方向 (指向像素/远离相机)
@@ -1125,12 +1212,12 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
 
                     // 计算相对于海平面的高度 (单位转换: mm -> m 或类似缩放)
                     // _AtmosphereFogParams2.w 是 Base Height
-                    float relHeight = i.positionWS.y * 0.001f - _AtmosphereFogParams2.w;
+                    float relHeight = surface.positionWS.y * 0.001f - _AtmosphereFogParams2.w;
 
                     // 计算光学深度 (Optical Depth) 的积分近似
                     // _AtmosphereFogParams4.w = Max Height
                     // _AtmosphereFogParams0.w = H (Scale Height, 标高)
-                    float heightDiffNorm = max((_AtmosphereFogParams4.w - _AtmosphereFogParams2.w - relHeight)
+                    float heightDiffNorm = max((_AtmosphereFogParams4.w - _AtmosphereFogParams2.w - relHeight) 
                                             / _AtmosphereFogParams0.w, 0.01f);
 
                     // 基于 Beer-Lambert 定律的透射率计算
@@ -1140,7 +1227,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
                     // 这里涉及视线方向的投影计算，用于确定积分的路径长度比例
                     // sqrt(somePosDir2) 是距离，_2968/_2970/_2972 是方向向量分量
                     // _AtmosphereFogParams5.w 和 3.w 参与计算几何路径长度
-                    float pathLengthScale = max(sqrt(distSq) * _AtmosphereFogParams5.w
+                    float pathLengthScale = max(sqrt(distSq) * _AtmosphereFogParams5.w 
                                             - _AtmosphereFogParams3.w, 0.0f);
 
                     // 计算积分上限的指数项
@@ -1185,14 +1272,14 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
                     // 基于透射率和相位函数计算出的天空背景色
                     // 应用光源颜色/强度 (_AtmosphereFogParams0)    可能是太阳光颜色强度
                     // _AtmosphereFogParams4 可能是环境光项
-                    float3 atmosphereInScatter = _AtmosphereFogParams0.xyz * factor
+                    float3 atmosphereInScatter = _AtmosphereFogParams0.xyz * factor 
                                 + (_AtmosphereFogParams1.xyz + _AtmosphereFogParams3.xyz) * _AtmosphereFogParams4.xyz;
 
                     // 除以散射总系数 (_3039/_3040...) 归一化，并 Clamp 防止溢出
                     // 这步对应物理公式中的: Integral(L_sun * rho * exp(-T)) -> Result / Extinction
                     atmosphereInScatter /= scatteringCoeff;
                     atmosphereInScatter = clamp(atmosphereInScatter, 0.0f, 255.0f); // HDR 范围限制
-
+                                
                     // 步骤 A: 混合大气散射背景 (Physically Based Sky)
                     // 公式: Result = AtmosphereInScatter + SceneColor * AtmosphereTransmittance
                     float3 colorWithAtmosphere;
@@ -1232,7 +1319,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
                         // 3.0518...e-05f 是 1/32768，归一化到 0~1 (或者是 -1~1)
                         // _IntegratedLightScattering 采样坐标计算中用到了这个抖动
                         // CB0[145].w (_VolumetricFogParams4.w) 控制抖动强度
-                        float jitterX = float(hash3 >> 16u) * 3.05180437e-05f;
+                        float jitterX = float(hash3 >> 16u) * 3.05180437e-05f; 
                         float jitterY = float(((hash2 * hash3) + hash1) >> 16u) * 3.05180437e-05f;
 
                         float3 uvw;
@@ -1265,19 +1352,19 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
                         // -------------------------------------------------------------------------
                         // 3. 在射线段内积分解析高度雾 (Analytical Fog Integration)
                         // -------------------------------------------------------------------------
-
+                        
                         // A. 第一层雾 (Layer 1)
                         // 参数: 射线Y分量 (EndHeight - StartHeight), CamHeight, Base, Falloff, Density
                         float vectorY = endHeight - GetCurrentViewPosition().y; // 其实就是 rayLength * viewDir.y
 
-                        float fogInt0 = ComputeHeightFogIntegral(vectorY, GetCurrentViewPosition().y,
-                                                                _ExponentialFogParams0.x,
-                                                                _ExponentialFogParams0.z,
+                        float fogInt0 = ComputeHeightFogIntegral(vectorY, GetCurrentViewPosition().y, 
+                                                                _ExponentialFogParams0.x, 
+                                                                _ExponentialFogParams0.z, 
                                                                 _ExponentialFogParams0.y);
-
-                        float fogInt1 = ComputeHeightFogIntegral(vectorY, GetCurrentViewPosition().y,
-                                                                _ExponentialFogParams3.z,
-                                                                _ExponentialFogParams3.x,
+                                                            
+                        float fogInt1 = ComputeHeightFogIntegral(vectorY, GetCurrentViewPosition().y, 
+                                                                _ExponentialFogParams3.z, 
+                                                                _ExponentialFogParams3.x, 
                                                                 _ExponentialFogParams3.y);
 
                         // --- 组合两层雾 ---
@@ -1319,7 +1406,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
                     }
                     else
                     {
-                        float3 toPixelVec = i.positionWS.xyz - GetCurrentViewPosition();
+                        float3 toPixelVec = surface.positionWS - GetCurrentViewPosition();
                         float distSqr = dot(toPixelVec, toPixelVec);
                         float invDist = rsqrt(max(distSqr, 0.000000001f));
 
@@ -1328,16 +1415,16 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
 
                         // --- 雾层 1 计算 (ExponentialFogParams0) ---
                         // _ExponentialFogParams0: x=BaseHeight, y=Density, z=Falloff
-                        float fogInt0 = ComputeHeightFogIntegral(toPixelVec.y, GetCurrentViewPosition().y,
-                                                                _ExponentialFogParams0.x,
-                                                                _ExponentialFogParams0.z,
+                        float fogInt0 = ComputeHeightFogIntegral(toPixelVec.y, GetCurrentViewPosition().y, 
+                                                                _ExponentialFogParams0.x, 
+                                                                _ExponentialFogParams0.z, 
                                                                 _ExponentialFogParams0.y);
 
                         // --- 雾层 2 计算 (ExponentialFogParams3) ---
                         // _ExponentialFogParams3: y=Density, x=Falloff, z=BaseHeight
-                        float fogInt1 = ComputeHeightFogIntegral(toPixelVec.y, GetCurrentViewPosition().y,
-                                                                _ExponentialFogParams3.z,
-                                                                _ExponentialFogParams3.x,
+                        float fogInt1 = ComputeHeightFogIntegral(toPixelVec.y, GetCurrentViewPosition().y, 
+                                                                _ExponentialFogParams3.z, 
+                                                                _ExponentialFogParams3.x, 
                                                                 _ExponentialFogParams3.y);
 
                         // --- 组合两层雾 ---
@@ -1376,8 +1463,8 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
                     // 5. 最终合成 (Final Composition)
                     // -----------------------------------------------------------
                     outputColor.xyz = colorWithAtmosphere * finalFogOpacity + finalFogColor;
-                }
-                else
+                } 
+                else 
                 {
                     outputColor.xyz = resultColor;    //最终颜色输出
                 }
@@ -1387,7 +1474,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             ENDHLSL
 
         }
-
+        
         // Outline
         UsePass "DanbaidongRP/EndFieldToon/Helpers/Outline/ForwardOutline"
 
@@ -1503,7 +1590,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             #pragma only_renderers d3d11 xboxseries ps5
             #pragma raytracing surface_shader
 
-
+      
             // -------------------------------------
             // Material Keywords
             #pragma shader_feature_local _NORMALMAP
@@ -1619,7 +1706,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
 
             TEXTURE2D(_BaseMap);
             SAMPLER(sampler_BaseMap);
-
+            
             TEXTURE2D(_PBRMask);
             SAMPLER(sampler_PBRMask);
 
@@ -1642,7 +1729,7 @@ Shader "DanbaidongRP/EndFieldToon/CBT-2/Hair"
             #pragma only_renderers d3d11 xboxseries ps5
             #pragma raytracing surface_shader
 
-
+      
             // -------------------------------------
             // Material Keywords
             // #pragma shader_feature_local _NORMALMAP
