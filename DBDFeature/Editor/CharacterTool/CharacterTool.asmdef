@@ -1,0 +1,21 @@
+{
+    "name": "CharacterTool",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2b82e46c4ca0a4eb697ab8ccdfb39af1"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [
+        "Mikktspace.NET.dll",
+        "mikktspace.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

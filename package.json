@@ -6,8 +6,8 @@
 
   "displayName": "Umi RenderExtensionFeature",
   "dependencies": {
-
-    "com.unity.shadergraph": "17.0.3"
+    "com.unity.shadergraph": "17.0.3",
+    "com.autodesk.fbx": "4.1.2"
   },
     "Samples":[
   {
